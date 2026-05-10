@@ -1,11 +1,11 @@
 ---
 import { Icon } from "astro-icon/components";
-import { siteConfig, studyConfig, studyData } from "@/config";
-import I18nKey from "@/i18n/i18nKey";
-import { i18n } from "@/i18n/translation";
 import StudyHeatmap from "@/components/pages/study/StudyHeatmap.svelte";
 import StudyProgress from "@/components/pages/study/StudyProgress.svelte";
 import StudyStats from "@/components/pages/study/StudyStats.svelte";
+import { siteConfig, studyConfig, studyData } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
 
 if (!siteConfig.pages.study) {

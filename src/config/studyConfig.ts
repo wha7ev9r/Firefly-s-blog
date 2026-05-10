@@ -1,5 +1,5 @@
-import type { StudyData } from "../types/study";
 import studyRaw from "../data/study-data.json";
+import type { StudyData } from "../types/study";
 
 export const studyConfig = {
 	dailyGoal: 30,
@@ -10,7 +10,7 @@ export const studyConfig = {
 		{ min: 1, max: 15 },
 		{ min: 16, max: 30 },
 		{ min: 31, max: 60 },
-		{ min: 61, max: Infinity },
+		{ min: 61, max: Number.POSITIVE_INFINITY },
 	],
 };
 
