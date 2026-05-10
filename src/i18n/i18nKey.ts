@@ -294,6 +294,24 @@ enum I18nKey {
 	galleryNoAlbums = "galleryNoAlbums",
 	galleryBackToAlbums = "galleryBackToAlbums",
 
+	// 学习页面
+	study = "study",
+	studyTitle = "studyTitle",
+	studySubtitle = "studySubtitle",
+	studyProgress = "studyProgress",
+	studyHeatmap = "studyHeatmap",
+	studyStats = "studyStats",
+	studyTotalDays = "studyTotalDays",
+	studyTotalHours = "studyTotalHours",
+	studyCurrentStreak = "studyCurrentStreak",
+	studyLongestStreak = "studyLongestStreak",
+	studyDailyAverage = "studyDailyAverage",
+	studyCourseStatusStudying = "studyCourseStatusStudying",
+	studyCourseStatusCompleted = "studyCourseStatusCompleted",
+	studyCourseStatusPending = "studyCourseStatusPending",
+	studyUpProvider = "studyUpProvider",
+	studyMinutes = "studyMinutes",
+
 	// 密码保护
 	passwordProtected = "passwordProtected",
 	passwordProtectedDesc = "passwordProtectedDesc",

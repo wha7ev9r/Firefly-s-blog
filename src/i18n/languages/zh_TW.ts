@@ -300,6 +300,24 @@ export const zh_TW: Translation = {
 	[Key.galleryNoAlbums]: "暫無相簿",
 	[Key.galleryBackToAlbums]: "返回相簿列表",
 
+	// 學習頁面
+	[Key.study]: "學習",
+	[Key.studyTitle]: "我的學習",
+	[Key.studySubtitle]: '跟隨 "學過石油的語文老師" 學習語文的進度記錄',
+	[Key.studyProgress]: "課程進度",
+	[Key.studyHeatmap]: "學習熱力圖",
+	[Key.studyStats]: "學習統計",
+	[Key.studyTotalDays]: "學習天數",
+	[Key.studyTotalHours]: "總學習時長",
+	[Key.studyCurrentStreak]: "當前連續",
+	[Key.studyLongestStreak]: "最長連續",
+	[Key.studyDailyAverage]: "日均學習",
+	[Key.studyCourseStatusStudying]: "學習中",
+	[Key.studyCourseStatusCompleted]: "已完成",
+	[Key.studyCourseStatusPending]: "未開始",
+	[Key.studyUpProvider]: "課程提供者",
+	[Key.studyMinutes]: "分鐘",
+
 	// 密碼保護
 	[Key.passwordProtected]: "密碼保護",
 	[Key.passwordProtectedDesc]: "這篇文章已被密碼保護，請輸入密碼查看內容。",

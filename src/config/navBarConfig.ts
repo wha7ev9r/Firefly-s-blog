@@ -18,6 +18,11 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		LinkPreset.Archive,
 	];
 
+	// 根据配置决定是否添加学习页，在siteConfig关闭pages.study时导航栏不显示学习
+	if (siteConfig.pages.study) {
+		links.push(LinkPreset.Study);
+	}
+
 	// 根据配置决定是否添加友链，在siteConfig关闭pages.friends时导航栏不显示友链
 	if (siteConfig.pages.friends) {
 		links.push(LinkPreset.Friends);

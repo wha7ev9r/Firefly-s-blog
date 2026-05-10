@@ -308,6 +308,25 @@ export const ru: Translation = {
 	[Key.galleryNoAlbums]: "Пока нет альбомов",
 	[Key.galleryBackToAlbums]: "Вернуться к альбомам",
 
+	// Страница обучения
+	[Key.study]: "Обучение",
+	[Key.studyTitle]: "Моё обучение",
+	[Key.studySubtitle]:
+		'Прогресс обучения с Bilibili учителем "学过石油的语文老师"',
+	[Key.studyProgress]: "Прогресс курса",
+	[Key.studyHeatmap]: "Тепловая карта",
+	[Key.studyStats]: "Статистика",
+	[Key.studyTotalDays]: "Дней",
+	[Key.studyTotalHours]: "Всего часов",
+	[Key.studyCurrentStreak]: "Текущая серия",
+	[Key.studyLongestStreak]: "Макс. серия",
+	[Key.studyDailyAverage]: "В среднем",
+	[Key.studyCourseStatusStudying]: "В процессе",
+	[Key.studyCourseStatusCompleted]: "Завершено",
+	[Key.studyCourseStatusPending]: "Ожидание",
+	[Key.studyUpProvider]: "Преподаватель",
+	[Key.studyMinutes]: "мин",
+
 	// Защита паролем
 	[Key.passwordProtected]: "Защищено паролем",
 	[Key.passwordProtectedDesc]:

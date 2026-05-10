@@ -306,6 +306,24 @@ export const ja: Translation = {
 	[Key.galleryNoAlbums]: "アルバムがありません",
 	[Key.galleryBackToAlbums]: "アルバム一覧に戻る",
 
+	// 学習ページ
+	[Key.study]: "学習",
+	[Key.studyTitle]: "私の学習",
+	[Key.studySubtitle]: "「学过石油的语文老师」による中国語学習の進捗記録",
+	[Key.studyProgress]: "コース進捗",
+	[Key.studyHeatmap]: "学習ヒートマップ",
+	[Key.studyStats]: "学習統計",
+	[Key.studyTotalDays]: "学習日数",
+	[Key.studyTotalHours]: "総学習時間",
+	[Key.studyCurrentStreak]: "現在の連続",
+	[Key.studyLongestStreak]: "最長連続",
+	[Key.studyDailyAverage]: "1日平均",
+	[Key.studyCourseStatusStudying]: "学習中",
+	[Key.studyCourseStatusCompleted]: "完了",
+	[Key.studyCourseStatusPending]: "未開始",
+	[Key.studyUpProvider]: "コース提供者",
+	[Key.studyMinutes]: "分",
+
 	// パスワード保護
 	[Key.passwordProtected]: "パスワード保護",
 	[Key.passwordProtectedDesc]:

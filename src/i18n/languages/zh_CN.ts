@@ -298,6 +298,24 @@ export const zh_CN: Translation = {
 	[Key.galleryNoAlbums]: "暂无相册",
 	[Key.galleryBackToAlbums]: "返回相册列表",
 
+	// 学习页面
+	[Key.study]: "学习",
+	[Key.studyTitle]: "我的学习",
+	[Key.studySubtitle]: '跟随 "学过石油的语文老师" 学习语文的进度记录',
+	[Key.studyProgress]: "课程进度",
+	[Key.studyHeatmap]: "学习热力图",
+	[Key.studyStats]: "学习统计",
+	[Key.studyTotalDays]: "学习天数",
+	[Key.studyTotalHours]: "总学习时长",
+	[Key.studyCurrentStreak]: "当前连续",
+	[Key.studyLongestStreak]: "最长连续",
+	[Key.studyDailyAverage]: "日均学习",
+	[Key.studyCourseStatusStudying]: "学习中",
+	[Key.studyCourseStatusCompleted]: "已完成",
+	[Key.studyCourseStatusPending]: "未开始",
+	[Key.studyUpProvider]: "课程提供者",
+	[Key.studyMinutes]: "分钟",
+
 	// 密码保护
 	[Key.passwordProtected]: "密码保护",
 	[Key.passwordProtectedDesc]: "这篇文章已被密码保护，请输入密码查看内容。",

@@ -307,6 +307,25 @@ export const en: Translation = {
 	[Key.galleryNoAlbums]: "No albums yet",
 	[Key.galleryBackToAlbums]: "Back to albums",
 
+	// Study Page
+	[Key.study]: "Study",
+	[Key.studyTitle]: "My Study",
+	[Key.studySubtitle]:
+		'Learning progress with Bilibili teacher "学过石油的语文老师"',
+	[Key.studyProgress]: "Course Progress",
+	[Key.studyHeatmap]: "Study Heatmap",
+	[Key.studyStats]: "Study Statistics",
+	[Key.studyTotalDays]: "Study Days",
+	[Key.studyTotalHours]: "Total Hours",
+	[Key.studyCurrentStreak]: "Current Streak",
+	[Key.studyLongestStreak]: "Longest Streak",
+	[Key.studyDailyAverage]: "Daily Average",
+	[Key.studyCourseStatusStudying]: "Studying",
+	[Key.studyCourseStatusCompleted]: "Completed",
+	[Key.studyCourseStatusPending]: "Pending",
+	[Key.studyUpProvider]: "Course Provider",
+	[Key.studyMinutes]: "min",
+
 	// Password Protection
 	[Key.passwordProtected]: "Password Protected",
 	[Key.passwordProtectedDesc]:

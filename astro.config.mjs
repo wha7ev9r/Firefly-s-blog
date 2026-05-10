@@ -178,6 +178,9 @@ export default defineConfig({
 				if (pathname === "/gallery/" && !siteConfig.pages.gallery) {
 					return false;
 				}
+				if (pathname === "/study/" && !siteConfig.pages.study) {
+					return false;
+				}
 
 				return true;
 			},
