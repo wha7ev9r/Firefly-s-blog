@@ -1,13 +1,13 @@
 {
 	"courses": [
 		{
-			"id": "wenyan-shici",
-			"title": "【学过石油的语文老师】文言文+诗歌合集",
+			"id": "gudian-shige-yuedu-1",
+			"title": "【学过石油的语文老师】高考古代诗歌阅读（一）",
 			"category": "文言文与诗歌",
 			"url": "https://space.bilibili.com/39737405/channel/seriesdetail?sid=39737405",
-			"totalLessons": 60,
-			"completedLessons": 25,
-			"status": "studying"
+			"totalLessons": 20,
+			"completedLessons": 20,
+			"status": "completed"
 		},
 		{
 			"id": "zuowen",
@@ -25,7 +25,7 @@
 			"url": "https://space.bilibili.com/39737405/channel/seriesdetail?sid=39737405",
 			"totalLessons": 30,
 			"completedLessons": 12,
-			"status": "studying"
+			"status": "completed"
 		}
 	],
 	"records": [
