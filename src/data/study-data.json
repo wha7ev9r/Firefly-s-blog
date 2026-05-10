@@ -1,13 +1,13 @@
 {
 	"courses": [
 		{
-			"id": "gudian-shige-yuedu-1",
-			"title": "【学过石油的语文老师】高考古代诗歌阅读（一）",
-			"category": "文言文与诗歌",
+			"id": "gushi-xilie",
+			"title": "【学过石油的语文老师】古诗系列",
+			"category": "古诗",
 			"url": "https://space.bilibili.com/39737405/channel/seriesdetail?sid=39737405",
-			"totalLessons": 20,
-			"completedLessons": 20,
-			"status": "completed"
+			"totalLessons": 38,
+			"completedLessons": 1,
+			"status": "studying"
 		},
 		{
 			"id": "zuowen",
@@ -15,8 +15,8 @@
 			"category": "作文",
 			"url": "https://space.bilibili.com/39737405/channel/seriesdetail?sid=39737405",
 			"totalLessons": 40,
-			"completedLessons": 40,
-			"status": "completed"
+			"completedLessons": 0,
+			"status": "pending"
 		},
 		{
 			"id": "jichu",
@@ -24,31 +24,11 @@
 			"category": "基础知识",
 			"url": "https://space.bilibili.com/39737405/channel/seriesdetail?sid=39737405",
 			"totalLessons": 30,
-			"completedLessons": 12,
-			"status": "completed"
+			"completedLessons": 0,
+			"status": "pending"
 		}
 	],
 	"records": [
-		{ "date": "2026-04-01", "minutes": 45, "note": "文言文实词专题（上）" },
-		{ "date": "2026-04-02", "minutes": 30, "note": "文言文实词专题（下）" },
-		{ "date": "2026-04-03", "minutes": 60, "note": "诗歌鉴赏：如何读懂古诗词" },
-		{ "date": "2026-04-05", "minutes": 40, "note": "诗歌鉴赏：意象分析" },
-		{ "date": "2026-04-06", "minutes": 35, "note": "文言文虚词归纳" },
-		{ "date": "2026-04-08", "minutes": 50, "note": "文言文特殊句式" },
-		{ "date": "2026-04-10", "minutes": 45, "note": "作文：审题立意" },
-		{ "date": "2026-04-12", "minutes": 30, "note": "作文：素材积累" },
-		{ "date": "2026-04-15", "minutes": 55, "note": "文言文翻译技巧" },
-		{ "date": "2026-04-18", "minutes": 40, "note": "诗歌鉴赏：表达技巧" },
-		{ "date": "2026-04-20", "minutes": 60, "note": "基础知识：病句修改" },
-		{ "date": "2026-04-22", "minutes": 35, "note": "基础知识：成语运用" },
-		{ "date": "2026-04-25", "minutes": 50, "note": "文言文断句技巧" },
-		{ "date": "2026-04-27", "minutes": 45, "note": "作文：结构安排" },
-		{ "date": "2026-04-29", "minutes": 40, "note": "诗歌鉴赏：语言风格" },
-		{ "date": "2026-05-01", "minutes": 30, "note": "文言文古今异义" },
-		{ "date": "2026-05-03", "minutes": 55, "note": "作文：开头结尾技巧" },
-		{ "date": "2026-05-05", "minutes": 45, "note": "基础知识：语言表达" },
-		{ "date": "2026-05-06", "minutes": 35, "note": "文言文词类活用" },
-		{ "date": "2026-05-08", "minutes": 50, "note": "诗歌鉴赏：比较阅读" },
-		{ "date": "2026-05-10", "minutes": 40, "note": "专题复习：文言文阅读" }
+		{ "date": "2026-05-10", "minutes": 45, "note": "高考古代诗歌阅读（一）" }
 	]
 }
