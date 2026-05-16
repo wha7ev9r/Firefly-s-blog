@@ -13,7 +13,7 @@
     {
       "name": "default",
       "pageBundle": false,
-      "previewPath": "'blog'",
+      "previewPath": "/posts/",
       "filePrefix": null,
       "clearEmpty": true,
       "fields": [
@@ -34,6 +34,11 @@
           "type": "datetime",
           "default": "{{now}}",
           "isPublishDate": true
+        },
+        {
+          "title": "updated",
+          "name": "updated",
+          "type": "datetime"
         },
         {
           "title": "image",
@@ -70,6 +75,36 @@
           "title": "comment",
           "name": "comment",
           "type": "boolean"
+        },
+        {
+          "title": "password",
+          "name": "password",
+          "type": "string"
+        },
+        {
+          "title": "password hint",
+          "name": "passwordHint",
+          "type": "string"
+        },
+        {
+          "title": "author",
+          "name": "author",
+          "type": "string"
+        },
+        {
+          "title": "source link",
+          "name": "sourceLink",
+          "type": "string"
+        },
+        {
+          "title": "license name",
+          "name": "licenseName",
+          "type": "string"
+        },
+        {
+          "title": "license url",
+          "name": "licenseUrl",
+          "type": "string"
         }
       ]
     }
