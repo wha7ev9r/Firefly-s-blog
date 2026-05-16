@@ -117,4 +117,4 @@ comment: true    # 允许评论
 - Astro/Svelte 文件中的未使用导入会被忽略（Biome override 配置）
 - 项目使用 pnpm，不要使用 npm 或 yarn
 - 修改 `src/content/posts/` 下的文章需要重新构建才能更新搜索索引
-- 项目有 `.gitattributes`（`* text=auto`），统一管理换行符。编辑文件若报 "String to replace not found"，通常是 CRLF 换行符不匹配，改用 Bash/sed 操作
+- 换行符：已通过 `.gitattributes`（`* text=auto`）+ 批量 `sed -i 's/\r$//'` 将所有源文件转为 LF。若仍遇 Edit 报 "String to replace not found"，换 Bash 操作。新克隆项目时建议第一时间建 `.gitattributes` 并运行 `git add --renormalize .`
