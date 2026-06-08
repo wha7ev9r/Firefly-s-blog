@@ -31,6 +31,9 @@ yarn.lock
 *.iml
 .claude
 
+# frontmatter cms local database
+.frontmatter/database/
+
 # docs
 Firefly-docs/
 
