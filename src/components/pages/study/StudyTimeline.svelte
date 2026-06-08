@@ -1,7 +1,11 @@
 <script lang="ts">
-	let { records = [] } = $props();
+let { records = [] } = $props();
 
-	let sorted = $derived([...records].sort((a: { date: string }, b: { date: string }) => b.date.localeCompare(a.date)));
+let sorted = $derived(
+	[...records].sort((a: { date: string }, b: { date: string }) =>
+		b.date.localeCompare(a.date),
+	),
+);
 </script>
 
 <div class="relative pl-8 before:content-[''] before:absolute before:left-[15px] before:top-2 before:bottom-2 before:w-0.5 before:bg-(--line-divider)">
