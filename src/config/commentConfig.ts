@@ -47,7 +47,7 @@ export const commentConfig: CommentConfig = {
 	//giscus评论系统配置
 	giscus: {
 		// 设置 Giscus 评论系统仓库
-		repo: "ksbbs/Firefly-s-blog",
+		repo: "wha7ev9r/Firefly-s-blog",
 		// 设置 Giscus 评论系统仓库ID
 		repoId: "R_kgDORyYGcA",
 		// 设置 Giscus 评论系统分类
