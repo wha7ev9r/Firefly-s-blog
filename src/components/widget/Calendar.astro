@@ -123,6 +123,11 @@ const postUrlPrefix = url("/posts/");
       .replace(/'/g, '&#39;');
   }
 
+  // 文章 id 可能包含子目录分隔符（如 nested/post），按段编码以保留路径结构
+  function encodePostIdPath(id) {
+    return String(id ?? '').split('/').map(encodeURIComponent).join('/');
+  }
+
   async function fetchData() {
     try {
       // 使用缓存避免 swup 导航时重复请求
@@ -372,7 +377,7 @@ const postUrlPrefix = url("/posts/");
         const date = new Date(post.published);
         const dateStr = `${date.getMonth() + 1}-${date.getDate()}`;
         return `
-        <a href="${postUrlPrefix}${encodeURI(post.id)}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-(--primary) dark:hover:text-(--primary) transition-colors px-2 py-1 rounded hover:bg-(--btn-plain-bg-hover)">
+        <a href="${postUrlPrefix}${encodePostIdPath(post.id)}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-(--primary) dark:hover:text-(--primary) transition-colors px-2 py-1 rounded hover:bg-(--btn-plain-bg-hover)">
           <span class="truncate">${escapeHtml(post.title)}</span>
           <span class="text-xs text-neutral-500 dark:text-neutral-400 ml-2 whitespace-nowrap">${dateStr}</span>
         </a>
@@ -432,7 +437,7 @@ const postUrlPrefix = url("/posts/");
             const date = new Date(post.published);
             const dateStr = `${date.getMonth() + 1}-${date.getDate()}`;
             return `
-            <a href="${postUrlPrefix}${encodeURI(post.id)}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-(--primary) dark:hover:text-(--primary) transition-colors px-2 py-1 rounded hover:bg-(--btn-plain-bg-hover)">
+            <a href="${postUrlPrefix}${encodePostIdPath(post.id)}/" class="flex justify-between items-center text-sm text-neutral-700 dark:text-neutral-300 hover:text-(--primary) dark:hover:text-(--primary) transition-colors px-2 py-1 rounded hover:bg-(--btn-plain-bg-hover)">
               <span class="truncate">${escapeHtml(post.title)}</span>
               <span class="text-xs text-neutral-500 dark:text-neutral-400 ml-2 whitespace-nowrap">${dateStr}</span>
             </a>

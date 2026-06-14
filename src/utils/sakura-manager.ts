@@ -57,8 +57,10 @@ class Sakura {
 	}
 
 	update() {
-		this.x = this.fn.x(this.x, this.y);
-		this.y = this.fn.y(this.x, this.y);
+		const nextX = this.fn.x(this.x, this.y);
+		const nextY = this.fn.y(this.x, this.y);
+		this.x = nextX;
+		this.y = nextY;
 		this.r = this.fn.r(this.r);
 		this.a = this.fn.a(this.a);
 

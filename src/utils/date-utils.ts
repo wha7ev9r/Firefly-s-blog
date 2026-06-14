@@ -1,5 +1,29 @@
 import { siteConfig } from "../config";
 
+// 缓存配置时区是否合法的判断结果，避免每次格式化都做一次 try
+let cachedTimezone: string | undefined;
+let timezoneChecked = false;
+
+function getSafeTimezone(): string | undefined {
+	if (timezoneChecked) return cachedTimezone;
+	timezoneChecked = true;
+	const tz = siteConfig.timezone;
+	if (!tz) {
+		cachedTimezone = undefined;
+		return undefined;
+	}
+	try {
+		new Intl.DateTimeFormat("en-CA", { timeZone: tz });
+		cachedTimezone = tz;
+	} catch {
+		console.warn(
+			`[date-utils] siteConfig.timezone "${tz}" 不是合法的 IANA 时区，回退到运行时默认时区`,
+		);
+		cachedTimezone = undefined;
+	}
+	return cachedTimezone;
+}
+
 export function formatDateToYYYYMMDD(date: Date): string {
 	const options: Intl.DateTimeFormatOptions = {
 		year: "numeric",
@@ -7,8 +31,9 @@ export function formatDateToYYYYMMDD(date: Date): string {
 		day: "2-digit",
 	};
 
-	if (siteConfig.timezone) {
-		options.timeZone = siteConfig.timezone;
+	const tz = getSafeTimezone();
+	if (tz) {
+		options.timeZone = tz;
 	}
 
 	const parts = new Intl.DateTimeFormat("en-CA", options).formatToParts(date);
@@ -39,9 +64,9 @@ export function formatDateI18n(
 		options.second = "2-digit";
 	}
 
-	// 如果配置了时区，则将其用于格式化（IANA 时区字符串）
-	if (siteConfig.timezone) {
-		(options as Intl.DateTimeFormatOptions).timeZone = siteConfig.timezone;
+	const tz = getSafeTimezone();
+	if (tz) {
+		options.timeZone = tz;
 	}
 
 	// 语言代码映射（小写键，与 translation.ts 保持一致）
@@ -91,8 +116,9 @@ export function formatDateTimeToYYYYMMDDHHmm(dateInput: Date | string): string {
 		hour12: false,
 	};
 
-	if (siteConfig.timezone) {
-		options.timeZone = siteConfig.timezone;
+	const tz = getSafeTimezone();
+	if (tz) {
+		options.timeZone = tz;
 	}
 
 	const parts = new Intl.DateTimeFormat("en-CA", options).formatToParts(date);
