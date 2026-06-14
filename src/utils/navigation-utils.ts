@@ -6,35 +6,35 @@ import { url } from "@/utils/url-utils";
 
 /**
  * 导航到指定页面
- * @param url 目标页面URL
+ * @param targetUrl 目标页面URL
  * @param options 导航选项
  */
 export function navigateToPage(
-	url: string,
+	targetUrl: string,
 	options?: {
 		replace?: boolean;
 		force?: boolean;
 	},
 ): void {
 	// 检查 URL 是否有效
-	if (!url || typeof url !== "string") {
+	if (!targetUrl || typeof targetUrl !== "string") {
 		console.warn("navigateToPage: Invalid URL provided");
 		return;
 	}
 
 	// 如果是外部链接，直接跳转
 	if (
-		url.startsWith("http://") ||
-		url.startsWith("https://") ||
-		url.startsWith("//")
+		targetUrl.startsWith("http://") ||
+		targetUrl.startsWith("https://") ||
+		targetUrl.startsWith("//")
 	) {
-		window.open(url, "_blank");
+		window.open(targetUrl, "_blank");
 		return;
 	}
 
 	// 如果是锚点链接，滚动到对应位置
-	if (url.startsWith("#")) {
-		const element = document.getElementById(url.slice(1));
+	if (targetUrl.startsWith("#")) {
+		const element = document.getElementById(targetUrl.slice(1));
 		if (element) {
 			element.scrollIntoView({ behavior: "smooth" });
 		}
@@ -46,18 +46,18 @@ export function navigateToPage(
 		try {
 			// 使用 Swup 进行无刷新跳转
 			if (options?.replace) {
-				window.swup.navigate(url, { history: false });
+				window.swup.navigate(targetUrl, { history: false });
 			} else {
-				window.swup.navigate(url);
+				window.swup.navigate(targetUrl);
 			}
 		} catch (error) {
 			console.error("Swup navigation failed:", error);
 			// 降级到普通跳转
-			fallbackNavigation(url, options);
+			fallbackNavigation(targetUrl, options);
 		}
 	} else {
 		// Swup 不可用时的降级处理
-		fallbackNavigation(url, options);
+		fallbackNavigation(targetUrl, options);
 	}
 }
 
@@ -66,16 +66,16 @@ export function navigateToPage(
  * 当 Swup 不可用时使用普通的页面跳转
  */
 function fallbackNavigation(
-	url: string,
+	targetUrl: string,
 	options?: {
 		replace?: boolean;
 		force?: boolean;
 	},
 ): void {
 	if (options?.replace) {
-		window.location.replace(url);
+		window.location.replace(targetUrl);
 	} else {
-		window.location.href = url;
+		window.location.href = targetUrl;
 	}
 }
 
@@ -120,17 +120,17 @@ export function waitForSwup(timeout = 5000): Promise<boolean> {
 
 /**
  * 预加载页面
- * @param url 要预加载的页面URL
+ * @param targetUrl 要预加载的页面URL
  */
-export function preloadPage(url: string): void {
-	if (!url || typeof url !== "string") {
+export function preloadPage(targetUrl: string): void {
+	if (!targetUrl || typeof targetUrl !== "string") {
 		return;
 	}
 
 	// 如果 Swup 可用，使用其预加载功能
 	if (isSwupReady() && window.swup.preload) {
 		try {
-			window.swup.preload(url);
+			window.swup.preload(targetUrl);
 		} catch (error) {
 			console.warn("Failed to preload page:", error);
 		}

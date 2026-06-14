@@ -1,7 +1,21 @@
 import { siteConfig } from "../config";
 
 export function formatDateToYYYYMMDD(date: Date): string {
-	return date.toISOString().substring(0, 10);
+	const options: Intl.DateTimeFormatOptions = {
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+	};
+
+	if (siteConfig.timezone) {
+		options.timeZone = siteConfig.timezone;
+	}
+
+	const parts = new Intl.DateTimeFormat("en-CA", options).formatToParts(date);
+	const get = (type: Intl.DateTimeFormatPartTypes) =>
+		parts.find((p) => p.type === type)?.value || "";
+
+	return `${get("year")}-${get("month")}-${get("day")}`;
 }
 
 // 国际化日期格式化函数
@@ -10,7 +24,7 @@ export function formatDateI18n(
 	includeTime?: boolean,
 ): string {
 	const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
-	const lang = siteConfig.lang || "en";
+	const lang = (siteConfig.lang || "en").toLowerCase();
 
 	// 根据语言设置不同的日期格式
 	const options: Intl.DateTimeFormatOptions = {
@@ -30,12 +44,16 @@ export function formatDateI18n(
 		(options as Intl.DateTimeFormatOptions).timeZone = siteConfig.timezone;
 	}
 
-	// 语言代码映射
+	// 语言代码映射（小写键，与 translation.ts 保持一致）
 	const localeMap: Record<string, string> = {
-		zh_CN: "zh-CN",
-		zh_TW: "zh-TW",
+		zh_cn: "zh-CN",
+		zh_tw: "zh-TW",
 		en: "en-US",
+		en_us: "en-US",
+		en_gb: "en-GB",
+		en_au: "en-AU",
 		ja: "ja-JP",
+		ja_jp: "ja-JP",
 		ko: "ko-KR",
 		es: "es-ES",
 		th: "th-TH",
@@ -45,6 +63,7 @@ export function formatDateI18n(
 		fr: "fr-FR",
 		de: "de-DE",
 		ru: "ru-RU",
+		ru_ru: "ru-RU",
 		ar: "ar-SA",
 	};
 

@@ -166,7 +166,11 @@ const labels = {
     if (!pwd) return;
     hideError();
     decrypt(pwd).then(function(html) {
-      sessionStorage.setItem(cacheKey, pwd);
+      try {
+        sessionStorage.setItem(cacheKey, pwd);
+      } catch (err) {
+        // 隐身模式或配额耗尽时 setItem 会抛错，忽略缓存失败不影响展示
+      }
       showContent(html);
     }).catch(function() {
       showError();
@@ -174,12 +178,21 @@ const labels = {
   });
 
   // Try cached password
-  var cached = sessionStorage.getItem(cacheKey);
+  var cached = null;
+  try {
+    cached = sessionStorage.getItem(cacheKey);
+  } catch (err) {
+    // 部分浏览器在禁用 storage 的情况下读取也会抛错，静默忽略
+  }
   if (cached) {
     decrypt(cached).then(function(html) {
       showContent(html);
     }).catch(function() {
-      sessionStorage.removeItem(cacheKey);
+      try {
+        sessionStorage.removeItem(cacheKey);
+      } catch (err) {
+        // 同上
+      }
     });
   }
 })();
