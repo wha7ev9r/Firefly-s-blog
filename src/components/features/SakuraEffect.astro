@@ -34,8 +34,10 @@ const config = sakuraConfig;
 			}
 
 			update() {
-				this.x = this.fn.x(this.x, this.y);
-				this.y = this.fn.y(this.y, this.y);
+				const nextX = this.fn.x(this.x, this.y);
+				const nextY = this.fn.y(this.x, this.y);
+				this.x = nextX;
+				this.y = nextY;
 				this.r = this.fn.r(this.r);
 				this.a = this.fn.a(this.a);
 				// 如果樱花越界，重新调整位置
@@ -166,6 +168,7 @@ const config = sakuraConfig;
 				this.animationId = null;
 				this.img = null;
 				this.isRunning = false;
+				this.boundHandleResize = this.handleResize.bind(this);
 			}
 
 			// 初始化樱花特效
@@ -203,7 +206,7 @@ const config = sakuraConfig;
 				this.ctx = this.canvas.getContext('2d');
 
 				// 监听窗口大小变化
-				window.addEventListener('resize', this.handleResize.bind(this));
+				window.addEventListener('resize', this.boundHandleResize);
 			}
 
 			// 创建樱花列表
@@ -285,7 +288,7 @@ const config = sakuraConfig;
 					this.canvas = null;
 				}
 
-				window.removeEventListener('resize', this.handleResize.bind(this));
+				window.removeEventListener('resize', this.boundHandleResize);
 				this.isRunning = false;
 			}
 
