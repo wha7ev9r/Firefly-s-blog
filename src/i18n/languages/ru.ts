@@ -327,6 +327,9 @@ export const ru: Translation = {
 	[Key.studyUpProvider]: "Преподаватель",
 	[Key.studyMinutes]: "мин",
 
+	// Ежедневная цитата
+	[Key.dailyQuote]: "Цитата дня",
+
 	// Защита паролем
 	[Key.passwordProtected]: "Защищено паролем",
 	[Key.passwordProtectedDesc]:

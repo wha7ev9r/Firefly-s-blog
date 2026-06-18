@@ -1,0 +1,151 @@
+---
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+
+interface Props {
+	class?: string;
+	style?: string;
+}
+const className = Astro.props.class;
+const style = Astro.props.style;
+---
+
+<WidgetLayout
+  name={i18n(I18nKey.dailyQuote)}
+  id="daily-quote"
+  class={className}
+  style={style}
+>
+  <div id="daily-quote-content">
+    <div class="flex items-center justify-center py-8 text-neutral-400 dark:text-neutral-500 text-sm">
+      <span class="loading-dot inline-block w-1.5 h-1.5 bg-neutral-400 dark:bg-neutral-500 rounded-full mr-1.5 animate-pulse" />
+      <span class="loading-dot inline-block w-1.5 h-1.5 bg-neutral-400 dark:bg-neutral-500 rounded-full mr-1.5 animate-pulse" style="animation-delay: 0.15s" />
+      <span class="loading-dot inline-block w-1.5 h-1.5 bg-neutral-400 dark:bg-neutral-500 rounded-full animate-pulse" style="animation-delay: 0.3s" />
+    </div>
+  </div>
+</WidgetLayout>
+
+<script>
+const CACHE_KEY = "daily-quote-cache";
+const CACHE_DURATION = 60 * 60 * 1000; // 1 hour
+
+type QuoteItem = {
+	text: string;
+	source: string;
+	type: "hitokoto" | "poetry";
+};
+
+type QuoteCache = {
+	timestamp: number;
+	data: [QuoteItem, QuoteItem];
+};
+
+async function fetchHitokoto(): Promise<QuoteItem | null> {
+	try {
+		const res = await fetch("https://v1.hitokoto.cn/");
+		if (!res.ok) return null;
+		const data = await res.json();
+		const source = [data.from, data.from_who].filter(Boolean).join(" - ");
+		return { text: data.hitokoto, source: source || "一言", type: "hitokoto" };
+	} catch {
+		return null;
+	}
+}
+
+async function fetchJinrishici(): Promise<QuoteItem | null> {
+	try {
+		const res = await fetch("https://v2.jinrishici.com/one.json");
+		if (!res.ok) return null;
+		const data = await res.json();
+		if (data.status !== "success") return null;
+		const {
+			content,
+			origin: { title, author, dynasty },
+		} = data.data;
+		const source = [author, dynasty].filter(Boolean).join(" · ");
+		return { text: content, source: source ? `${title} —— ${source}` : title, type: "poetry" };
+	} catch {
+		return null;
+	}
+}
+
+function escapeHtml(str: string): string {
+	return String(str ?? "")
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;");
+}
+
+function getCached(): QuoteCache | null {
+	try {
+		const raw = sessionStorage.getItem(CACHE_KEY);
+		if (!raw) return null;
+		const cache: QuoteCache = JSON.parse(raw);
+		if (Date.now() - cache.timestamp > CACHE_DURATION) {
+			sessionStorage.removeItem(CACHE_KEY);
+			return null;
+		}
+		return cache;
+	} catch {
+		return null;
+	}
+}
+
+function setCache(a: QuoteItem, b: QuoteItem): void {
+	try {
+		const cache: QuoteCache = { timestamp: Date.now(), data: [a, b] };
+		sessionStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+	} catch {
+		// ignore
+	}
+}
+
+function renderHitokoto(item: QuoteItem): string {
+	return `<div class="relative pl-5 py-2">
+		<span class="absolute left-0 top-1.5 text-3xl leading-none text-(--primary) opacity-40 select-none font-serif">&ldquo;</span>
+		<p class="text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed italic">${escapeHtml(item.text)}</p>
+		<p class="text-xs text-neutral-400 dark:text-neutral-500 mt-1.5 text-right">—— ${escapeHtml(item.source)}</p>
+	</div>`;
+}
+
+function renderPoetry(item: QuoteItem): string {
+	const [titlePart, authorPart] = item.source.split(" —— ");
+	const lines = item.text.split("，");
+	return `<div class="relative pl-5 py-2">
+		<span class="absolute left-0 top-1.5 text-lg leading-none text-(--primary) opacity-40 select-none font-serif">❧</span>
+		<div class="text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed">
+			${lines.map((l) => `<p class="text-center">${escapeHtml(l)}${l.endsWith("。") || l.endsWith("？") || l.endsWith("！") ? "" : "，"}</p>`).join("")}
+		</div>
+		<p class="text-xs text-neutral-400 dark:text-neutral-500 mt-1.5 text-right">${escapeHtml(authorPart || titlePart)}</p>
+	</div>`;
+}
+
+function renderFallback(): string {
+	return `<div class="py-3 text-center text-xs text-neutral-400 dark:text-neutral-500">载入失败</div>`;
+}
+
+function renderBoth(hito: QuoteItem | null, poem: QuoteItem | null): string {
+	const parts: string[] = [];
+	if (hito) parts.push(renderHitokoto(hito));
+	if (poem) parts.push(renderPoetry(poem));
+	if (parts.length === 0) return renderFallback();
+	return parts.join(`<div class="border-t border-dashed border-neutral-200 dark:border-neutral-700 my-2"></div>`);
+}
+
+async function load() {
+	const cached = getCached();
+	if (cached) {
+		document.getElementById("daily-quote-content")!.innerHTML = renderBoth(cached.data[0], cached.data[1]);
+		return;
+	}
+
+	const container = document.getElementById("daily-quote-content")!;
+	const [hito, poem] = await Promise.all([fetchHitokoto(), fetchJinrishici()]);
+	if (hito && poem) setCache(hito, poem);
+	container.innerHTML = renderBoth(hito, poem);
+}
+
+document.addEventListener("astro:page-load", load);
+</script>

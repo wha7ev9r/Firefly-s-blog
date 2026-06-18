@@ -312,6 +312,9 @@ enum I18nKey {
 	studyUpProvider = "studyUpProvider",
 	studyMinutes = "studyMinutes",
 
+	// 每日一句
+	dailyQuote = "dailyQuote",
+
 	// 密码保护
 	passwordProtected = "passwordProtected",
 	passwordProtectedDesc = "passwordProtectedDesc",

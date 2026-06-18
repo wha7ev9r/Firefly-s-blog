@@ -383,7 +383,8 @@ export type WidgetComponentType =
 	| "advertisement"
 	| "stats"
 	| "calendar"
-	| "music";
+	| "music"
+	| "dailyQuote";
 
 export type WidgetComponentConfig = {
 	type: WidgetComponentType; // 组件类型
