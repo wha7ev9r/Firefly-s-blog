@@ -328,6 +328,7 @@ export const en: Translation = {
 
 	// Daily Quote
 	[Key.dailyQuote]: "Daily Quote",
+	[Key.dailyQuoteError]: "Failed to load",
 
 	// Password Protection
 	[Key.passwordProtected]: "Password Protected",

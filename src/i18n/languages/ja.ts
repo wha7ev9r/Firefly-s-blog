@@ -326,6 +326,7 @@ export const ja: Translation = {
 
 	// デイリー名言
 	[Key.dailyQuote]: "今日の一言",
+	[Key.dailyQuoteError]: "読み込み失敗",
 
 	// パスワード保護
 	[Key.passwordProtected]: "パスワード保護",

@@ -329,6 +329,7 @@ export const ru: Translation = {
 
 	// Ежедневная цитата
 	[Key.dailyQuote]: "Цитата дня",
+	[Key.dailyQuoteError]: "Ошибка загрузки",
 
 	// Защита паролем
 	[Key.passwordProtected]: "Защищено паролем",

@@ -17,7 +17,7 @@ const style = Astro.props.style;
   class={className}
   style={style}
 >
-  <div id="daily-quote-content">
+  <div data-daily-quote-content data-fallback-text={i18n(I18nKey.dailyQuoteError)}>
     <div class="flex items-center justify-center py-8 text-neutral-400 dark:text-neutral-500 text-sm">
       <span class="loading-dot inline-block w-1.5 h-1.5 bg-neutral-400 dark:bg-neutral-500 rounded-full mr-1.5 animate-pulse" />
       <span class="loading-dot inline-block w-1.5 h-1.5 bg-neutral-400 dark:bg-neutral-500 rounded-full mr-1.5 animate-pulse" style="animation-delay: 0.15s" />
@@ -122,8 +122,18 @@ function renderPoetry(item: QuoteItem): string {
 	</div>`;
 }
 
+function renderToAllContainers(html: string) {
+	document
+		.querySelectorAll<HTMLElement>("[data-daily-quote-content]")
+		.forEach((el) => {
+			el.innerHTML = html;
+		});
+}
+
 function renderFallback(): string {
-	return `<div class="py-3 text-center text-xs text-neutral-400 dark:text-neutral-500">载入失败</div>`;
+	const fallbackText =
+		document.querySelector("[data-daily-quote-content]")?.getAttribute("data-fallback-text") || "Failed to load";
+	return `<div class="py-3 text-center text-xs text-neutral-400 dark:text-neutral-500">${escapeHtml(fallbackText)}</div>`;
 }
 
 function renderBoth(hito: QuoteItem | null, poem: QuoteItem | null): string {
@@ -137,14 +147,13 @@ function renderBoth(hito: QuoteItem | null, poem: QuoteItem | null): string {
 async function load() {
 	const cached = getCached();
 	if (cached) {
-		document.getElementById("daily-quote-content")!.innerHTML = renderBoth(cached.data[0], cached.data[1]);
+		renderToAllContainers(renderBoth(cached.data[0], cached.data[1]));
 		return;
 	}
 
-	const container = document.getElementById("daily-quote-content")!;
 	const [hito, poem] = await Promise.all([fetchHitokoto(), fetchJinrishici()]);
 	if (hito && poem) setCache(hito, poem);
-	container.innerHTML = renderBoth(hito, poem);
+	renderToAllContainers(renderBoth(hito, poem));
 }
 
 document.addEventListener("astro:page-load", load);

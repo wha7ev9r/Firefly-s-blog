@@ -318,6 +318,7 @@ export const zh_CN: Translation = {
 
 	// 每日一句
 	[Key.dailyQuote]: "每日一句",
+	[Key.dailyQuoteError]: "加载失败",
 
 	// 密码保护
 	[Key.passwordProtected]: "密码保护",

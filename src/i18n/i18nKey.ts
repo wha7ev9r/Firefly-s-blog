@@ -314,6 +314,7 @@ enum I18nKey {
 
 	// 每日一句
 	dailyQuote = "dailyQuote",
+	dailyQuoteError = "dailyQuoteError",
 
 	// 密码保护
 	passwordProtected = "passwordProtected",
