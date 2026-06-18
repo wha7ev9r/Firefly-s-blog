@@ -1,79 +1,56 @@
 # AGENTS.md
 
-OpenCode 在 Firefly 仓库的工作指引。本文件只记录容易踩坑或需要跨文件推断才能知道的细节。
+OpenCode 在 Firefly 仓库的工作指引。只保留容易误判或需要跨文件确认的事实。
 
-## 项目基础
+## 项目与工具链
 
-- 这是 **Astro 6 + Tailwind CSS 4 + Svelte 5** 的静态博客主题模板，单包（非 monorepo）。
-- 强制使用 **pnpm ≥ 9**，`package.json` 有 `preinstall: npx only-allow pnpm`；`packageManager` 锁定为 `pnpm@9.14.4`。
-- 运行环境要求：**Node.js ≥ 22**。
+- 单包 Astro 6.0.8 静态博客主题，不是 monorepo；UI 主要是 `.astro` + Svelte 5，Tailwind CSS 4 通过 `@tailwindcss/vite` 接入。
+- 必须用 pnpm：`packageManager` 固定 `pnpm@9.14.4`，`preinstall` 会通过 `only-allow pnpm` 拦截其他包管理器。
+- Node 版本按仓库要求使用 `>=22`；CI 在 Node 22 和 23 上跑 check/build。
+- `.npmrc` 使用 npmmirror/淘宝源和 sharp 等二进制镜像，除非明确要切源，不要删除这些配置。
 
 ## 常用命令
 
-| 命令                       | 说明                                                                           |
-| -------------------------- | ------------------------------------------------------------------------------ |
-| `pnpm install`             | 安装依赖（注意 `.npmrc` 使用淘宝镜像，开发机无外网时可能不需要改）             |
-| `pnpm dev`                 | 开发服务器，默认 `http://localhost:4321`                                       |
-| `pnpm build`               | 完整构建：`scripts/generate-icons.js` → `astro build` → `pagefind --site dist` |
-| `pnpm preview`             | 预览 `./dist`                                                                  |
-| `pnpm check`               | Astro 类型检查（`astro check`）                                                |
-| `pnpm type-check`          | TypeScript 类型检查（`tsc --noEmit`）                                          |
-| `pnpm lint`                | Biome 检查并自动修复（`biome check --write ./src`）                            |
-| `pnpm format`              | Biome 格式化（`biome format --write ./src`）                                   |
-| `pnpm new-post <filename>` | 在 `src/content/posts/` 创建带 frontmatter 的文章；无扩展名时自动加 `.md`      |
-| `pnpm icons`               | 单独运行图标扫描生成脚本（`scripts/generate-icons.js`）                        |
+- `pnpm install`：安装依赖；CI 的 build/check 用 `pnpm install --frozen-lockfile`，deploy workflow 用 `--no-frozen-lockfile`。
+- `pnpm dev` / `pnpm start`：启动 Astro dev，默认 `http://localhost:4321`。
+- `pnpm build`：完整本地构建，顺序是 `node scripts/generate-icons.js` -> `astro build` -> `pagefind --site dist`。
+- `pnpm check`：`astro check`；`pnpm type-check`：`tsc --noEmit`。
+- `pnpm lint` 会执行 `biome check --write ./src` 并修改文件；只想模拟 CI 时用 `pnpm exec biome ci ./src --reporter=github`。
+- `pnpm format` 只格式化 `./src`；`pnpm icons` 只重新生成图标数据；`pnpm new-post <filename>` 在 `src/content/posts/` 下生成 `.md`，已有文件会失败。
+
+## 构建与生成物
+
+- `src/constants/icons.ts` 是生成文件且被 Biome 忽略，不要手动改；新增/删除 Svelte 中的 `icon="..."`、`getIconSvg(...)`、`hasIcon(...)` 后运行 `pnpm icons` 或 `pnpm build`。
+- 图标预处理只扫描 `src/**/*.svelte`，支持的前缀由 `scripts/generate-icons.js` 的 `ICON_SETS` 决定；`astro.config.mjs` 的 `astro-icon` include 列表不完全等同于预处理列表。
+- `pnpm build` 之后才会生成 Pagefind 搜索索引；修改 `src/content/posts/` 后仅跑 `astro build` 不会更新搜索索引。
+- `siteConfig.generateOgImages` 默认关闭；开启后 `src/pages/og/[...slug].png.ts` 会为非草稿文章生成 OG 图，并可能联网下载 Google Fonts。
+- Bangumi 页面在 dev 只取一页数据，生产构建会分页请求 Bangumi API；相关开关和 `userId` 在 `src/config/siteConfig.ts`。
+
+## 配置与路由
+
+- 配置集中在 `src/config/`，统一出口是 `src/config/index.ts`；新增配置要同时考虑 `src/types/config.ts` 和统一导出。
+- `siteConfig.pages` 不只是导航开关：页面自身会 redirect/404，`astro.config.mjs` 的 sitemap filter 也会按它过滤。
+- 修改 `siteConfig.rehypeCallouts.theme`、语言、页面开关等会影响 Astro/Vite 配置或构建期代码，开发服务器通常需要重启。
+- 常用别名来自 `tsconfig.json`：`@/*`、`@components/*`、`@layouts/*`、`@utils/*`、`@i18n/*`、`@constants/*`、`@assets/*`。
+
+## 内容与 i18n
+
+- 文章集合只加载 `src/content/posts/**/*.{md,mdx}`；schema 在 `src/content.config.ts`，草稿在生产通过 `getSortedPosts*` 过滤，dev 会显示。
+- Frontmatter 支持的非显眼字段包括 `updated`、`author`、`sourceLink`、`licenseName`、`licenseUrl`、`password`、`passwordHint`；Front Matter CMS 配置在 `frontmatter.json`。
+- 文章 `image: "api"` 会走随机封面配置 `src/config/coverImageConfig.ts`；本地文章图片路径在文章页会按文章文件目录解析。
+- 新增 UI 文案要同步 `src/i18n/i18nKey.ts` 和 `src/i18n/languages/{zh_CN,zh_TW,en,ja,ru}.ts`；缺失翻译会先回退中文，再回退英文。
 
 ## 代码风格与检查
 
-- **Biome 2.4.8** 替代 ESLint/Prettier。
-- 缩进使用 **Tab**（`biome.json` 配置）。
-- 字符串格式化为 **双引号**。
-- `.astro`、`.svelte`、`.vue` 文件中的未使用变量/导入**不报错**（Biome override 已关闭）。
-- 生成文件 `src/constants/icons.ts` 被 Biome 忽略，不要手动编辑。
+- Biome 2.4.8 替代 ESLint/Prettier；格式化使用 Tab 和双引号，但仓库里部分脚本/配置未必已格式化，不要顺手重排无关文件。
+- Biome 范围排除了 `src/**/*.css`、`src/public/**`、`dist/**`、`node_modules/**`、`src/constants/icons.ts`。
+- `.astro`、`.svelte`、`.vue` 的未使用变量/导入检查被关闭，不能只靠 Biome 发现这类问题。
+- Vite 生产构建会 drop `console` 和 `debugger`，调试输出不要作为生产行为依赖。
+- 仓库 `.gitattributes` 为 `* text=auto`；保持 LF，避免大范围换行归一化混入功能改动。
 
-## 构建流程细节
+## CI 与部署
 
-1. `scripts/generate-icons.js` 扫描 `src/**/*.svelte` 中的 `icon="..."`、`getIconSvg(...)`、`hasIcon(...)` 等用法，从 `@iconify-json/*` 包生成 `src/constants/icons.ts`。**新增/删除图标后必须重新构建或运行 `pnpm icons`。**
-2. `astro build` 输出到 `dist/`。
-3. `pagefind --site dist` 生成搜索索引。**新增或修改 `src/content/posts/` 文章后必须重新构建才能更新搜索。**
-
-## 配置系统
-
-- 配置集中在 `src/config/`，统一从 `src/config/index.ts` 导出。
-- 核心文件：`siteConfig.ts`（站点 URL、语言、页面开关）、`sidebarConfig.ts`（侧边栏布局）、`profileConfig.ts`（作者资料）、`commentConfig.ts`（评论系统）。
-- 修改 `siteConfig.ts` 等配置后通常需要**重启 `pnpm dev`** 才能生效。
-- 页面开关（`siteConfig.pages`）同时控制导航栏、路由、Sitemap 生成，禁用某页面时相关入口会自动隐藏。
-
-## 路径别名（`tsconfig.json`）
-
-- `@components/*` → `src/components/*`
-- `@layouts/*` → `src/layouts/*`
-- `@utils/*` → `src/utils/*`
-- `@i18n/*` → `src/i18n/*`
-- `@constants/*` → `src/constants/*`
-- `@assets/*` → `src/assets/*`
-- `@/*` → `src/*`
-
-## 内容创作
-
-- 文章放在 `src/content/posts/`，类型定义在 `src/content.config.ts`。
-- Frontmatter 关键字段：`title`、`published`、`description`、`image`、`tags`、`category`、`draft`、`pinned`、`comment`、`lang`。
-- `image` 可用本地图片路径，也可写 `"api"` 启用随机封面（列表在 `src/config/coverImageConfig.ts`）。
-- 站点支持多语言 UI，但仅简体中文为人工翻译，其他为 AI 翻译；多语言文本在 `src/i18n/`。
-
-## 部署
-
-- `vercel.json` 已配置：构建命令 `pnpm build`、输出目录 `dist`、框架 `astro`。
-- 其他平台（Netlify / Cloudflare Pages 等）按 Astro 默认静态站点部署即可。
-- 构建产物在 `dist/`。
-
-## 换行与编辑
-
-- 仓库使用 `.gitattributes`（`* text=auto`）统一换行符为 LF。
-- 若 Edit 工具报 "String to replace not found"，可能是 CRLF 导致，改用 Bash 工具（如 `sed`）处理，或运行 `git add --renormalize .` 后再编辑。
-
-## 其他提示
-
-- 图标使用 `astro-icon` 的 `Icon` 组件，预配置了 `material-symbols`、`fa7-*`、`simple-icons`、`mdi` 等图标集。如果新增图标后页面没有显示，先运行 `pnpm icons` 再重新构建。
-- 搜索索引基于 Pagefind，`.katex`、`.katex-display`、`[data-pagefind-ignore]` 以及搜索面板本身会被排除（配置在 `pagefind.yml`）。
-- 有 `frontmatter.json` 配置，给 Front Matter CMS 使用，通常不需要修改。
+- PR/push 到 `master` 会跑 `.github/workflows/build.yml` 的 `pnpm astro check` 和 `pnpm astro build`，矩阵 Node 22/23；这里的 build 不包含图标生成和 Pagefind。
+- `.github/workflows/biome.yml` 用 `biome ci ./src --reporter=github`，不是 `pnpm lint`，不会自动写回。
+- `.github/workflows/deploy.yml` 只在 `master` push 或手动触发，使用 Node 22、pnpm 9.14.4、`pnpm run build`，再把 `dist` 推到 `pages` 分支并创建 `dist/.nojekyll`。
+- `vercel.json` 已固定 Vercel 构建命令 `pnpm build`、输出目录 `dist`、安装命令 `pnpm install`，并配置了全站安全响应头与 `/_astro/*` 长缓存。
