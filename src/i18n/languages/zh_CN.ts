@@ -316,6 +316,10 @@ export const zh_CN: Translation = {
 	[Key.studyUpProvider]: "课程提供者",
 	[Key.studyMinutes]: "分钟",
 
+	// 每日一句
+	[Key.dailyQuote]: "每日一句",
+	[Key.dailyQuoteError]: "加载失败",
+
 	// 密码保护
 	[Key.passwordProtected]: "密码保护",
 	[Key.passwordProtectedDesc]: "这篇文章已被密码保护，请输入密码查看内容。",

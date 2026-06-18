@@ -318,6 +318,10 @@ export const zh_TW: Translation = {
 	[Key.studyUpProvider]: "課程提供者",
 	[Key.studyMinutes]: "分鐘",
 
+	// 每日一句
+	[Key.dailyQuote]: "每日一句",
+	[Key.dailyQuoteError]: "載入失敗",
+
 	// 密碼保護
 	[Key.passwordProtected]: "密碼保護",
 	[Key.passwordProtectedDesc]: "這篇文章已被密碼保護，請輸入密碼查看內容。",

@@ -326,6 +326,10 @@ export const en: Translation = {
 	[Key.studyUpProvider]: "Course Provider",
 	[Key.studyMinutes]: "min",
 
+	// Daily Quote
+	[Key.dailyQuote]: "Daily Quote",
+	[Key.dailyQuoteError]: "Failed to load",
+
 	// Password Protection
 	[Key.passwordProtected]: "Password Protected",
 	[Key.passwordProtectedDesc]:
