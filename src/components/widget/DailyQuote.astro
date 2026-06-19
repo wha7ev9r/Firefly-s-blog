@@ -2,6 +2,7 @@
 import WidgetLayout from "@/components/common/WidgetLayout.astro";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
+import { fetchBuildTimeQuote } from "@/utils/daily-quote-fetch";
 
 interface Props {
 	class?: string;
@@ -9,6 +10,9 @@ interface Props {
 }
 const className = Astro.props.class;
 const style = Astro.props.style;
+
+const buildTimeQuote = await fetchBuildTimeQuote();
+const initialData = JSON.stringify(buildTimeQuote);
 ---
 
 <WidgetLayout
@@ -17,7 +21,7 @@ const style = Astro.props.style;
   class={className}
   style={style}
 >
-  <div data-daily-quote-content data-fallback-text={i18n(I18nKey.dailyQuoteError)}>
+  <div data-daily-quote-content data-fallback-text={i18n(I18nKey.dailyQuoteError)} data-initial={initialData}>
     <div class="flex items-center justify-center py-8 text-neutral-400 dark:text-neutral-500 text-sm">
       <span class="loading-dot inline-block w-1.5 h-1.5 bg-neutral-400 dark:bg-neutral-500 rounded-full mr-1.5 animate-pulse" />
       <span class="loading-dot inline-block w-1.5 h-1.5 bg-neutral-400 dark:bg-neutral-500 rounded-full mr-1.5 animate-pulse" style="animation-delay: 0.15s" />
@@ -27,8 +31,7 @@ const style = Astro.props.style;
 </WidgetLayout>
 
 <script>
-const CACHE_KEY = "daily-quote-cache";
-const CACHE_DURATION = 60 * 60 * 1000; // 1 hour
+const CACHE_KEY = "daily-quote-v2";
 
 type QuoteItem = {
 	text: string;
@@ -36,10 +39,123 @@ type QuoteItem = {
 	type: "hitokoto" | "poetry";
 };
 
-type QuoteCache = {
-	timestamp: number;
-	data: [QuoteItem, QuoteItem];
+type QuoteData = {
+	hitokoto: QuoteItem | null;
+	poetry: QuoteItem | null;
 };
+
+type QuoteCache = {
+	expiresAt: number;
+	data: QuoteData;
+};
+
+function escapeHtml(str: string): string {
+	return String(str ?? "")
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;");
+}
+
+function getNextMidnight(): number {
+	const now = new Date();
+	const tomorrow = new Date(now);
+	tomorrow.setDate(tomorrow.getDate() + 1);
+	tomorrow.setHours(0, 0, 0, 0);
+	return tomorrow.getTime();
+}
+
+function getCached(): QuoteCache | null {
+	try {
+		const raw = localStorage.getItem(CACHE_KEY);
+		if (!raw) return null;
+		const cache: QuoteCache = JSON.parse(raw);
+		return cache;
+	} catch {
+		return null;
+	}
+}
+
+function setCache(data: QuoteData): void {
+	try {
+		const cache: QuoteCache = { expiresAt: getNextMidnight(), data };
+		localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+	} catch {
+	}
+}
+
+function isExpired(cache: QuoteCache): boolean {
+	return Date.now() > cache.expiresAt;
+}
+
+function readInitialData(): QuoteData | null {
+	const el = document.querySelector("[data-daily-quote-content]");
+	if (!el) return null;
+	const raw = el.getAttribute("data-initial");
+	if (!raw) return null;
+	try {
+		return JSON.parse(raw) as QuoteData;
+	} catch {
+		return null;
+	}
+}
+
+function renderHitokoto(item: QuoteItem): string {
+	return `<div class="relative pl-5 py-2">
+		<span class="absolute left-0 top-1.5 text-3xl leading-none text-(--primary) opacity-40 select-none font-serif">&ldquo;</span>
+		<p class="text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed italic">${escapeHtml(item.text)}</p>
+		<p class="text-xs text-neutral-400 dark:text-neutral-500 mt-1.5 text-right">—— ${escapeHtml(item.source)}</p>
+	</div>`;
+}
+
+function renderPoetry(item: QuoteItem): string {
+	const [titlePart, authorPart] = item.source.split(" —— ");
+	const lines = item.text.split("，");
+	return `<div class="relative pl-5 py-2">
+		<span class="absolute left-0 top-1.5 text-lg leading-none text-(--primary) opacity-40 select-none font-serif">❧</span>
+		<div class="text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed">
+			${lines.map((l) => `<p class="text-center">${escapeHtml(l)}${l.endsWith("。") || l.endsWith("？") || l.endsWith("！") ? "" : "，"}</p>`).join("")}
+		</div>
+		<p class="text-xs text-neutral-400 dark:text-neutral-500 mt-1.5 text-right">${escapeHtml(authorPart || titlePart)}</p>
+	</div>`;
+}
+
+function renderFallback(): string {
+	const fallbackText =
+		document.querySelector("[data-daily-quote-content]")?.getAttribute("data-fallback-text") || "Failed to load";
+	return `<div class="py-3 text-center text-xs text-neutral-400 dark:text-neutral-500">${escapeHtml(fallbackText)}</div>`;
+}
+
+function renderBoth(data: QuoteData): string {
+	const parts: string[] = [];
+	if (data.hitokoto) parts.push(renderHitokoto(data.hitokoto));
+	if (data.poetry) parts.push(renderPoetry(data.poetry));
+	if (parts.length === 0) return renderFallback();
+	return parts.join(`<div class="border-t border-dashed border-neutral-200 dark:border-neutral-700 my-2"></div>`);
+}
+
+function renderToAllContainers(html: string) {
+	document
+		.querySelectorAll<HTMLElement>("[data-daily-quote-content]")
+		.forEach((el) => {
+			el.innerHTML = html;
+		});
+}
+
+function renderSingleToAllContainers(item: QuoteItem) {
+	const html = item.type === "hitokoto" ? renderHitokoto(item) : renderPoetry(item);
+	const separator = `<div class="border-t border-dashed border-neutral-200 dark:border-neutral-700 my-2"></div>`;
+	document
+		.querySelectorAll<HTMLElement>("[data-daily-quote-content]")
+		.forEach((el) => {
+			const current = el.innerHTML;
+			if (current.includes("loading-dot")) {
+				el.innerHTML = html;
+			} else {
+				el.innerHTML = current + separator + html;
+			}
+		});
+}
 
 async function fetchHitokoto(): Promise<QuoteItem | null> {
 	try {
@@ -70,90 +186,99 @@ async function fetchJinrishici(): Promise<QuoteItem | null> {
 	}
 }
 
-function escapeHtml(str: string): string {
-	return String(str ?? "")
-		.replace(/&/g, "&amp;")
-		.replace(/</g, "&lt;")
-		.replace(/>/g, "&gt;")
-		.replace(/"/g, "&quot;");
-}
+let racingResolve: ((data: QuoteData) => void) | null = null;
 
-function getCached(): QuoteCache | null {
-	try {
-		const raw = sessionStorage.getItem(CACHE_KEY);
-		if (!raw) return null;
-		const cache: QuoteCache = JSON.parse(raw);
-		if (Date.now() - cache.timestamp > CACHE_DURATION) {
-			sessionStorage.removeItem(CACHE_KEY);
-			return null;
+function refreshInBackground() {
+	if (racingResolve) return;
+
+	let hitokotoDone: QuoteItem | null = null;
+	let poetryDone: QuoteItem | null = null;
+	let settledCount = 0;
+
+	racingResolve = () => {};
+
+	const onSettled = () => {
+		settledCount++;
+		if (settledCount === 2) {
+			const data: QuoteData = { hitokoto: hitokotoDone, poetry: poetryDone };
+			if (hitokotoDone || poetryDone) {
+				setCache(data);
+			}
+			racingResolve = null;
 		}
-		return cache;
-	} catch {
-		return null;
-	}
+	};
+
+	fetchHitokoto().then((result) => {
+		hitokotoDone = result;
+		onSettled();
+	});
+
+	fetchJinrishici().then((result) => {
+		poetryDone = result;
+		onSettled();
+	});
 }
 
-function setCache(a: QuoteItem, b: QuoteItem): void {
-	try {
-		const cache: QuoteCache = { timestamp: Date.now(), data: [a, b] };
-		sessionStorage.setItem(CACHE_KEY, JSON.stringify(cache));
-	} catch {
-		// ignore
-	}
+function showLoadingThenFetch() {
+	let hitokotoDone: QuoteItem | null = null;
+	let poetryDone: QuoteItem | null = null;
+	let renderedHitokoto = false;
+	let renderedPoetry = false;
+
+	fetchHitokoto().then((result) => {
+		hitokotoDone = result;
+		if (result && !renderedHitokoto) {
+			renderedHitokoto = true;
+			renderSingleToAllContainers(result);
+		}
+		if (hitokotoDone !== null && poetryDone !== null) {
+			const data: QuoteData = { hitokoto: hitokotoDone, poetry: poetryDone };
+			if (hitokotoDone || poetryDone) setCache(data);
+			if (!renderedHitokoto && !renderedPoetry) {
+				renderToAllContainers(renderBoth(data));
+			}
+		}
+	});
+
+	fetchJinrishici().then((result) => {
+		poetryDone = result;
+		if (result && !renderedPoetry) {
+			renderedPoetry = true;
+			if (renderedHitokoto) {
+				renderSingleToAllContainers(result);
+			} else {
+				renderedPoetry = true;
+				renderSingleToAllContainers(result);
+			}
+		}
+		if (hitokotoDone !== null && poetryDone !== null) {
+			const data: QuoteData = { hitokoto: hitokotoDone, poetry: poetryDone };
+			if (hitokotoDone || poetryDone) setCache(data);
+			if (!renderedHitokoto && !renderedPoetry) {
+				renderToAllContainers(renderBoth(data));
+			}
+		}
+	});
 }
 
-function renderHitokoto(item: QuoteItem): string {
-	return `<div class="relative pl-5 py-2">
-		<span class="absolute left-0 top-1.5 text-3xl leading-none text-(--primary) opacity-40 select-none font-serif">&ldquo;</span>
-		<p class="text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed italic">${escapeHtml(item.text)}</p>
-		<p class="text-xs text-neutral-400 dark:text-neutral-500 mt-1.5 text-right">—— ${escapeHtml(item.source)}</p>
-	</div>`;
-}
-
-function renderPoetry(item: QuoteItem): string {
-	const [titlePart, authorPart] = item.source.split(" —— ");
-	const lines = item.text.split("，");
-	return `<div class="relative pl-5 py-2">
-		<span class="absolute left-0 top-1.5 text-lg leading-none text-(--primary) opacity-40 select-none font-serif">❧</span>
-		<div class="text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed">
-			${lines.map((l) => `<p class="text-center">${escapeHtml(l)}${l.endsWith("。") || l.endsWith("？") || l.endsWith("！") ? "" : "，"}</p>`).join("")}
-		</div>
-		<p class="text-xs text-neutral-400 dark:text-neutral-500 mt-1.5 text-right">${escapeHtml(authorPart || titlePart)}</p>
-	</div>`;
-}
-
-function renderToAllContainers(html: string) {
-	document
-		.querySelectorAll<HTMLElement>("[data-daily-quote-content]")
-		.forEach((el) => {
-			el.innerHTML = html;
-		});
-}
-
-function renderFallback(): string {
-	const fallbackText =
-		document.querySelector("[data-daily-quote-content]")?.getAttribute("data-fallback-text") || "Failed to load";
-	return `<div class="py-3 text-center text-xs text-neutral-400 dark:text-neutral-500">${escapeHtml(fallbackText)}</div>`;
-}
-
-function renderBoth(hito: QuoteItem | null, poem: QuoteItem | null): string {
-	const parts: string[] = [];
-	if (hito) parts.push(renderHitokoto(hito));
-	if (poem) parts.push(renderPoetry(poem));
-	if (parts.length === 0) return renderFallback();
-	return parts.join(`<div class="border-t border-dashed border-neutral-200 dark:border-neutral-700 my-2"></div>`);
-}
-
-async function load() {
+function load() {
 	const cached = getCached();
 	if (cached) {
-		renderToAllContainers(renderBoth(cached.data[0], cached.data[1]));
+		renderToAllContainers(renderBoth(cached.data));
+		if (isExpired(cached)) {
+			refreshInBackground();
+		}
 		return;
 	}
 
-	const [hito, poem] = await Promise.all([fetchHitokoto(), fetchJinrishici()]);
-	if (hito && poem) setCache(hito, poem);
-	renderToAllContainers(renderBoth(hito, poem));
+	const initial = readInitialData();
+	if (initial && (initial.hitokoto || initial.poetry)) {
+		renderToAllContainers(renderBoth(initial));
+		setCache(initial);
+		return;
+	}
+
+	showLoadingThenFetch();
 }
 
 document.addEventListener("astro:page-load", load);

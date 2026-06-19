@@ -13,6 +13,7 @@ import {
 	backgroundWallpaper,
 	expressiveCodeConfig,
 	profileConfig,
+	sidebarLayoutConfig,
 	siteConfig,
 } from "@/config";
 import {
@@ -98,6 +99,22 @@ const siteLang = lang.replace("_", "-");
 <html lang={siteLang} class="bg-(--page-bg) text-[14px] md:text-[16px]" data-wallpaper-mode={backgroundWallpaper.mode}>
   <head>
     <meta charset="UTF-8" />
+    {
+      (() => {
+        const allComponents = [
+          ...sidebarLayoutConfig.leftComponents,
+          ...sidebarLayoutConfig.rightComponents,
+          ...sidebarLayoutConfig.mobileBottomComponents,
+        ];
+        const hasDailyQuote = allComponents.some((c) => c.type === "dailyQuote" && c.enable);
+        return hasDailyQuote && (
+          <>
+            <link rel="preconnect" href="https://v1.hitokoto.cn" />
+            <link rel="preconnect" href="https://v2.jinrishici.com" />
+          </>
+        );
+      })()
+    }
     {siteConfig.analytics?.googleAnalyticsId && (
             <GoogleAnalytics analyticsId={siteConfig.analytics.googleAnalyticsId} />
     )}
