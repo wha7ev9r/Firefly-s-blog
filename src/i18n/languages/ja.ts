@@ -324,8 +324,8 @@ export const ja: Translation = {
 	[Key.studyUpProvider]: "コース提供者",
 	[Key.studyMinutes]: "分",
 
-	// デイリー名言
-	[Key.dailyQuote]: "今日の一言",
+	// デイリー名言（座右の銘＋今日の一言）
+	[Key.dailyQuote]: "今日の二言",
 	[Key.dailyQuoteError]: "読み込み失敗",
 
 	// パスワード保護
