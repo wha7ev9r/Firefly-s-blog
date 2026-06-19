@@ -159,7 +159,10 @@ function renderSingleToAllContainers(item: QuoteItem) {
 
 async function fetchHitokoto(): Promise<QuoteItem | null> {
 	try {
-		const res = await fetch("https://v1.hitokoto.cn/");
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 5000);
+		const res = await fetch("https://v1.hitokoto.cn/", { signal: controller.signal });
+		clearTimeout(timeoutId);
 		if (!res.ok) return null;
 		const data = await res.json();
 		const source = [data.from, data.from_who].filter(Boolean).join(" - ");
@@ -171,7 +174,10 @@ async function fetchHitokoto(): Promise<QuoteItem | null> {
 
 async function fetchJinrishici(): Promise<QuoteItem | null> {
 	try {
-		const res = await fetch("https://v2.jinrishici.com/one.json");
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 5000);
+		const res = await fetch("https://v2.jinrishici.com/one.json", { signal: controller.signal });
+		clearTimeout(timeoutId);
 		if (!res.ok) return null;
 		const data = await res.json();
 		if (data.status !== "success") return null;
@@ -222,43 +228,55 @@ function refreshInBackground() {
 function showLoadingThenFetch() {
 	let hitokotoDone: QuoteItem | null = null;
 	let poetryDone: QuoteItem | null = null;
+	let hitokotoSettled = false;
+	let poetrySettled = false;
 	let renderedHitokoto = false;
 	let renderedPoetry = false;
 
-	fetchHitokoto().then((result) => {
-		hitokotoDone = result;
-		if (result && !renderedHitokoto) {
-			renderedHitokoto = true;
-			renderSingleToAllContainers(result);
-		}
-		if (hitokotoDone !== null && poetryDone !== null) {
-			const data: QuoteData = { hitokoto: hitokotoDone, poetry: poetryDone };
-			if (hitokotoDone || poetryDone) setCache(data);
-			if (!renderedHitokoto && !renderedPoetry) {
-				renderToAllContainers(renderBoth(data));
+	fetchHitokoto()
+		.then((result) => {
+			hitokotoDone = result;
+			if (result && !renderedHitokoto) {
+				renderedHitokoto = true;
+				renderSingleToAllContainers(result);
 			}
-		}
-	});
+		})
+		.catch(() => {})
+		.finally(() => {
+			hitokotoSettled = true;
+			if (hitokotoSettled && poetrySettled) {
+				const data: QuoteData = { hitokoto: hitokotoDone, poetry: poetryDone };
+				if (hitokotoDone || poetryDone) setCache(data);
+				if (!renderedHitokoto && !renderedPoetry) {
+					renderToAllContainers(renderBoth(data));
+				}
+			}
+		});
 
-	fetchJinrishici().then((result) => {
-		poetryDone = result;
-		if (result && !renderedPoetry) {
-			renderedPoetry = true;
-			if (renderedHitokoto) {
-				renderSingleToAllContainers(result);
-			} else {
+	fetchJinrishici()
+		.then((result) => {
+			poetryDone = result;
+			if (result && !renderedPoetry) {
 				renderedPoetry = true;
-				renderSingleToAllContainers(result);
+				if (renderedHitokoto) {
+					renderSingleToAllContainers(result);
+				} else {
+					renderedPoetry = true;
+					renderSingleToAllContainers(result);
+				}
 			}
-		}
-		if (hitokotoDone !== null && poetryDone !== null) {
-			const data: QuoteData = { hitokoto: hitokotoDone, poetry: poetryDone };
-			if (hitokotoDone || poetryDone) setCache(data);
-			if (!renderedHitokoto && !renderedPoetry) {
-				renderToAllContainers(renderBoth(data));
+		})
+		.catch(() => {})
+		.finally(() => {
+			poetrySettled = true;
+			if (hitokotoSettled && poetrySettled) {
+				const data: QuoteData = { hitokoto: hitokotoDone, poetry: poetryDone };
+				if (hitokotoDone || poetryDone) setCache(data);
+				if (!renderedHitokoto && !renderedPoetry) {
+					renderToAllContainers(renderBoth(data));
+				}
 			}
-		}
-	});
+		});
 }
 
 function load() {
