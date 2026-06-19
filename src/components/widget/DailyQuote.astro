@@ -355,10 +355,10 @@ function load() {
 				renderToAllContainers(renderBoth(cached.data));
 			}
 			refreshInBackground();
+		} else {
+			renderToAllContainers(renderBoth(cached.data));
 			return;
 		}
-		renderToAllContainers(renderBoth(cached.data));
-		return;
 	}
 
 	if (hasSsgContent) {
