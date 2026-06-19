@@ -13,6 +13,64 @@ const style = Astro.props.style;
 
 const buildTimeQuote = await fetchBuildTimeQuote();
 const initialData = JSON.stringify(buildTimeQuote);
+
+function escapeHtml(str: string): string {
+	return String(str ?? "")
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;");
+}
+
+function renderHitokoto(item: { text: string; source: string }): string {
+	return `<div class="relative pl-5 py-2">
+		<span class="absolute left-0 top-1.5 text-3xl leading-none text-(--primary) opacity-40 select-none font-serif">&ldquo;</span>
+		<p class="text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed italic">${escapeHtml(item.text)}</p>
+		<p class="text-xs text-neutral-400 dark:text-neutral-500 mt-1.5 text-right">—— ${escapeHtml(item.source)}</p>
+	</div>`;
+}
+
+function renderPoetry(item: { text: string; source: string }): string {
+	const [titlePart, authorPart] = item.source.split(" —— ");
+	const lines = item.text.split("，");
+	return `<div class="relative pl-5 py-2">
+		<span class="absolute left-0 top-1.5 text-lg leading-none text-(--primary) opacity-40 select-none font-serif">❧</span>
+		<div class="text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed">
+			${lines.map((l) => `<p class="text-center">${escapeHtml(l)}${l.endsWith("。") || l.endsWith("？") || l.endsWith("！") ? "" : "，"}</p>`).join("")}
+		</div>
+		<p class="text-xs text-neutral-400 dark:text-neutral-500 mt-1.5 text-right">${escapeHtml(authorPart || titlePart)}</p>
+	</div>`;
+}
+
+function renderMotto(): string {
+	return `<div class="relative pl-5 py-2">
+		<span class="absolute left-0 top-1.5 text-lg leading-none text-(--primary) opacity-40 select-none font-serif">❧</span>
+		<div class="text-sm text-neutral-700 dark:text-neutral-200 leading-relaxed">
+			<p class="text-center">不诱于誉，</p>
+			<p class="text-center">不恐于诽，</p>
+			<p class="text-center">率道而行，</p>
+			<p class="text-center">端然正己。</p>
+		</div>
+		<p class="text-xs text-neutral-400 dark:text-neutral-500 mt-1.5 text-right">《荀子·非十二子》</p>
+	</div>`;
+}
+
+function renderQuoteHtml(data: {
+	hitokoto?: { text: string; source: string } | null;
+	poetry?: { text: string; source: string } | null;
+}): string {
+	const parts: string[] = [];
+	if (data.hitokoto) parts.push(renderHitokoto(data.hitokoto));
+	if (data.poetry) parts.push(renderPoetry(data.poetry));
+	return parts.join(
+		`<div class="border-t border-dashed border-neutral-200 dark:border-neutral-700 my-2"></div>`,
+	);
+}
+
+const hasBuildData = !!(buildTimeQuote.hitokoto || buildTimeQuote.poetry);
+const mottoHtml = renderMotto();
+const quoteHtml = hasBuildData ? renderQuoteHtml(buildTimeQuote) : "";
+const separatorHtml = `<div class="border-t border-dashed border-neutral-200 dark:border-neutral-700 my-2"></div>`;
 ---
 
 <WidgetLayout
@@ -21,12 +79,18 @@ const initialData = JSON.stringify(buildTimeQuote);
   class={className}
   style={style}
 >
+  <Fragment set:html={mottoHtml} />
+  <Fragment set:html={separatorHtml} />
   <div data-daily-quote-content data-fallback-text={i18n(I18nKey.dailyQuoteError)} data-initial={initialData}>
-    <div class="flex items-center justify-center py-8 text-neutral-400 dark:text-neutral-500 text-sm">
-      <span class="loading-dot inline-block w-1.5 h-1.5 bg-neutral-400 dark:bg-neutral-500 rounded-full mr-1.5 animate-pulse" />
-      <span class="loading-dot inline-block w-1.5 h-1.5 bg-neutral-400 dark:bg-neutral-500 rounded-full mr-1.5 animate-pulse" style="animation-delay: 0.15s" />
-      <span class="loading-dot inline-block w-1.5 h-1.5 bg-neutral-400 dark:bg-neutral-500 rounded-full animate-pulse" style="animation-delay: 0.3s" />
-    </div>
+    {hasBuildData ? (
+      <Fragment set:html={quoteHtml} />
+    ) : (
+      <div class="flex items-center justify-center py-8 text-neutral-400 dark:text-neutral-500 text-sm">
+        <span class="loading-dot inline-block w-1.5 h-1.5 bg-neutral-400 dark:bg-neutral-500 rounded-full mr-1.5 animate-pulse" />
+        <span class="loading-dot inline-block w-1.5 h-1.5 bg-neutral-400 dark:bg-neutral-500 rounded-full mr-1.5 animate-pulse" style="animation-delay: 0.15s" />
+        <span class="loading-dot inline-block w-1.5 h-1.5 bg-neutral-400 dark:bg-neutral-500 rounded-full animate-pulse" style="animation-delay: 0.3s" />
+      </div>
+    )}
   </div>
 </WidgetLayout>
 
@@ -281,17 +345,23 @@ function showLoadingThenFetch() {
 
 function load() {
 	const cached = getCached();
+	const initial = readInitialData();
+	const hasSsgContent = !!(initial && (initial.hitokoto || initial.poetry));
+
 	if (cached) {
-		renderToAllContainers(renderBoth(cached.data));
 		if (isExpired(cached)) {
+			// SSG already rendered fresh content, refresh in background
+			if (!hasSsgContent) {
+				renderToAllContainers(renderBoth(cached.data));
+			}
 			refreshInBackground();
+		} else {
+			renderToAllContainers(renderBoth(cached.data));
+			return;
 		}
-		return;
 	}
 
-	const initial = readInitialData();
-	if (initial && (initial.hitokoto || initial.poetry)) {
-		renderToAllContainers(renderBoth(initial));
+	if (hasSsgContent) {
 		setCache(initial);
 		return;
 	}

@@ -316,8 +316,8 @@ export const zh_CN: Translation = {
 	[Key.studyUpProvider]: "课程提供者",
 	[Key.studyMinutes]: "分钟",
 
-	// 每日一句
-	[Key.dailyQuote]: "每日一句",
+	// 每日二言（座右铭 + 每日一言）
+	[Key.dailyQuote]: "每日二言",
 	[Key.dailyQuoteError]: "加载失败",
 
 	// 密码保护
