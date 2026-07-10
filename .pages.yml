@@ -1,0 +1,129 @@
+media:
+  - name: post_images
+    label: 文章图片
+    input: src/content/posts/images
+    output: "./images"
+    rename: safe
+
+content:
+  - name: posts
+    label: 文章
+    type: collection
+    path: src/content/posts
+    subfolders: true
+    filename:
+      template: "{primary}.md"
+      field: create
+    view:
+      fields: [title, published, draft, category]
+      primary: title
+      sort: [published, title]
+      default:
+        sort: published
+        order: desc
+    fields:
+      - name: title
+        label: 标题
+        type: string
+        required: true
+      - name: published
+        label: 发布日期
+        type: date
+        required: true
+        options:
+          time: true
+          format: "yyyy-MM-dd HH:mm:ss"
+      - name: updated
+        label: 更新日期
+        type: date
+        options:
+          time: true
+          format: "yyyy-MM-dd HH:mm:ss"
+      - name: draft
+        label: 草稿
+        type: boolean
+        default: false
+      - name: description
+        label: 描述
+        type: text
+      - name: image
+        label: 封面图
+        type: string
+      - name: tags
+        label: 标签
+        type: string
+        list: true
+      - name: category
+        label: 分类
+        type: string
+      - name: lang
+        label: 语言
+        type: string
+      - name: pinned
+        label: 置顶
+        type: boolean
+        default: false
+      - name: author
+        label: 作者
+        type: string
+      - name: sourceLink
+        label: 原文链接
+        type: string
+      - name: licenseName
+        label: 许可证名称
+        type: string
+      - name: licenseUrl
+        label: 许可证链接
+        type: string
+      - name: comment
+        label: 评论
+        type: boolean
+        default: true
+      - name: password
+        label: 密码
+        type: string
+      - name: passwordHint
+        label: 密码提示
+        type: string
+      - name: body
+        label: 正文
+        type: rich-text
+        options:
+          media: post_images
+          format: markdown
+
+  - name: about
+    label: 关于页面
+    type: file
+    path: src/content/spec/about.md
+
+  - name: friends
+    label: 友链页面
+    type: file
+    path: src/content/spec/friends.mdx
+
+  - name: guestbook
+    label: 留言板
+    type: file
+    path: src/content/spec/guestbook.md
+    fields:
+      - name: title
+        label: 标题
+        type: string
+      - name: description
+        label: 描述
+        type: text
+      - name: body
+        label: 正文
+        type: rich-text
+        options:
+          format: markdown
+
+settings:
+  content:
+    merge: true
+  commit:
+    templates:
+      create: "Create {path} (via Pages CMS)"
+      update: "Update {path} (via Pages CMS)"
+      delete: "Delete {path} (via Pages CMS)"
