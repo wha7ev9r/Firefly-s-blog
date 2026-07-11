@@ -48,7 +48,11 @@ content:
         type: text
       - name: image
         label: 封面图
-        type: string
+        type: image
+        options:
+          media: post_images
+          path: src/content/posts/images
+          extensions: [avif, webp, png, jpg, jpeg]
       - name: tags
         label: 标签
         type: string
