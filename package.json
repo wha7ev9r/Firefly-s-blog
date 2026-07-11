@@ -46,6 +46,8 @@
     "expressive-code-language-badge": "^1.1.0",
     "glob": "^11.1.0",
     "gray-matter": "^4.0.3",
+    "hast-util-from-html-isomorphic": "^2.0.0",
+    "hast-util-to-text": "^4.0.2",
     "hastscript": "^9.0.1",
     "katex": "^0.17.0",
     "marked": "^16.4.2",
@@ -73,7 +75,8 @@
     "svelte": "^5.56.4",
     "typescript": "^5.9.2",
     "unist-util-is": "^6.0.1",
-    "unist-util-visit": "^5.1.0"
+    "unist-util-visit": "^5.1.0",
+    "unist-util-visit-parents": "^6.0.2"
   },
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.10",

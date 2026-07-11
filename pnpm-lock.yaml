@@ -95,6 +95,12 @@ importers:
       gray-matter:
         specifier: ^4.0.3
         version: 4.0.3
+      hast-util-from-html-isomorphic:
+        specifier: ^2.0.0
+        version: 2.0.0
+      hast-util-to-text:
+        specifier: ^4.0.2
+        version: 4.0.2
       hastscript:
         specifier: ^9.0.1
         version: 9.0.1
@@ -179,6 +185,9 @@ importers:
       unist-util-visit:
         specifier: ^5.1.0
         version: 5.1.0
+      unist-util-visit-parents:
+        specifier: ^6.0.2
+        version: 6.0.2
     devDependencies:
       '@astrojs/ts-plugin':
         specifier: ^1.10.10

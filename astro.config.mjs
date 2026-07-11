@@ -9,9 +9,6 @@ import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeComponents from "rehype-components"; /* Render the custom directive content */
-import rehypeKatex from "rehype-katex";
-import katex from "katex";
-import "katex/dist/contrib/mhchem.mjs"; // 加载 mhchem 扩展
 import rehypeSlug from "rehype-slug";
 import remarkDirective from "remark-directive"; /* Handle directives */
 import remarkMath from "remark-math";
@@ -32,6 +29,7 @@ import mdx from "@astrojs/mdx";
 import rehypeEmailProtection from "./src/plugins/rehype-email-protection.mjs";
 import rehypeExternalLinks from "./src/plugins/rehype-external-links.mjs";
 import rehypeFigure from "./src/plugins/rehype-figure.mjs";
+import rehypeKatexMhchem from "./src/plugins/rehype-katex-mhchem.mjs";
 import { remarkImageGrid } from "./src/plugins/remark-image-grid.js";
 
 // https://astro.build/config
@@ -192,7 +190,7 @@ export default defineConfig({
 			remarkMermaid,
 		],
 		rehypePlugins: [
-			[rehypeKatex, { katex }],
+			rehypeKatexMhchem,
 			[rehypeCallouts, { theme: siteConfig.rehypeCallouts.theme }],
 			rehypeSlug,
 			rehypeMermaid,
