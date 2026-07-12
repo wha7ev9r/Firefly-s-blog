@@ -531,11 +531,19 @@ const widgetId =
         ui.title.innerText = e.detail.message || cfg.i18n.error;
     });
 
-    // ── Button click delegates ───────────────────────────────
-    ui.btnPlay.addEventListener('click', function () { mgr.togglePlay(); });
-    ui.btnNext.addEventListener('click', function () { mgr.playNext(); });
-    ui.btnPrev.addEventListener('click', function () { mgr.playPrev(); });
-    ui.btnRepeat.addEventListener('click', function () { mgr.cyclePlayMode(); });
+    // ── Button click delegates (ensureInit before action) ────
+    ui.btnPlay.addEventListener('click', function () {
+        ensureInit().then(function () { mgr.togglePlay(); });
+    });
+    ui.btnNext.addEventListener('click', function () {
+        ensureInit().then(function () { mgr.playNext(); });
+    });
+    ui.btnPrev.addEventListener('click', function () {
+        ensureInit().then(function () { mgr.playPrev(); });
+    });
+    ui.btnRepeat.addEventListener('click', function () {
+        ensureInit().then(function () { mgr.cyclePlayMode(); });
+    });
     ui.btnMute.addEventListener('click', function () { mgr.toggleMute(); });
 
     ui.volContainer.addEventListener('click', function (e) {
@@ -564,20 +572,22 @@ const widgetId =
             ui.iconLrcOn.classList.add('hidden');
             ui.iconLrcOff.classList.remove('hidden');
         } else {
-            // Close playlist if open
-            ui.playlistDrawer.style.gridTemplateRows = '0fr';
-            ui.playlistDrawer.classList.remove('opacity-100');
-            ui.playlistDrawer.classList.add('opacity-0');
-            ui.btnDrawer.classList.remove('text-[var(--primary)]');
-            ui.btnDrawer.classList.add('text-neutral-400');
+            ensureInit().then(function () {
+                // Close playlist if open
+                ui.playlistDrawer.style.gridTemplateRows = '0fr';
+                ui.playlistDrawer.classList.remove('opacity-100');
+                ui.playlistDrawer.classList.add('opacity-0');
+                ui.btnDrawer.classList.remove('text-[var(--primary)]');
+                ui.btnDrawer.classList.add('text-neutral-400');
 
-            ui.lrcDrawer.style.gridTemplateRows = '1fr';
-            ui.lrcDrawer.classList.add('opacity-100');
-            ui.lrcDrawer.classList.remove('opacity-0');
-            ui.btnLrc.classList.add('text-[var(--primary)]');
-            ui.btnLrc.classList.remove('text-neutral-400');
-            ui.iconLrcOn.classList.remove('hidden');
-            ui.iconLrcOff.classList.add('hidden');
+                ui.lrcDrawer.style.gridTemplateRows = '1fr';
+                ui.lrcDrawer.classList.add('opacity-100');
+                ui.lrcDrawer.classList.remove('opacity-0');
+                ui.btnLrc.classList.add('text-[var(--primary)]');
+                ui.btnLrc.classList.remove('text-neutral-400');
+                ui.iconLrcOn.classList.remove('hidden');
+                ui.iconLrcOff.classList.add('hidden');
+            });
         }
     });
 
@@ -590,18 +600,20 @@ const widgetId =
             ui.btnDrawer.classList.add('text-neutral-400');
             ui.btnDrawer.classList.remove('text-[var(--primary)]');
         } else {
-            // Close lyrics if open
-            ui.lrcDrawer.style.gridTemplateRows = '0fr';
-            ui.lrcDrawer.classList.remove('opacity-100');
-            ui.lrcDrawer.classList.add('opacity-0');
-            ui.btnLrc.classList.remove('text-[var(--primary)]');
-            ui.btnLrc.classList.add('text-neutral-400');
+            ensureInit().then(function () {
+                // Close lyrics if open
+                ui.lrcDrawer.style.gridTemplateRows = '0fr';
+                ui.lrcDrawer.classList.remove('opacity-100');
+                ui.lrcDrawer.classList.add('opacity-0');
+                ui.btnLrc.classList.remove('text-[var(--primary)]');
+                ui.btnLrc.classList.add('text-neutral-400');
 
-            ui.playlistDrawer.style.gridTemplateRows = '1fr';
-            ui.playlistDrawer.classList.add('opacity-100');
-            ui.playlistDrawer.classList.remove('opacity-0');
-            ui.btnDrawer.classList.remove('text-neutral-400');
-            ui.btnDrawer.classList.add('text-[var(--primary)]');
+                ui.playlistDrawer.style.gridTemplateRows = '1fr';
+                ui.playlistDrawer.classList.add('opacity-100');
+                ui.playlistDrawer.classList.remove('opacity-0');
+                ui.btnDrawer.classList.remove('text-neutral-400');
+                ui.btnDrawer.classList.add('text-[var(--primary)]');
+            });
         }
     });
 
@@ -663,15 +675,42 @@ const widgetId =
         observer.observe(widget.parentNode, { childList: true });
     }
 
-    // ── Init: either sync existing state or trigger init ─────
+    // ── Lazy init: only fetch data on first user interaction ──
+    var _initPromise = null;
+    function ensureInit() {
+        var s = mgr.getState();
+        if (s.initialized && s.playlist.length > 0) return Promise.resolve();
+        if (_initPromise) return _initPromise;
+        setLoading(true);
+        _initPromise = new Promise(function (resolve) {
+            var handler = function () {
+                setLoading(false);
+                window.removeEventListener('fm:init', handler);
+                window.removeEventListener('fm:error', errorHandler);
+                syncAll();
+                resolve();
+            };
+            var errorHandler = function () {
+                setLoading(false);
+                window.removeEventListener('fm:init', handler);
+                window.removeEventListener('fm:error', errorHandler);
+                syncAll();
+                resolve();
+            };
+            window.addEventListener('fm:init', handler, { once: true });
+            window.addEventListener('fm:error', errorHandler, { once: true });
+            mgr.init();
+        });
+        return _initPromise;
+    }
+
+    // Sync initial UI if already initialized (e.g. second widget mount)
     var currentState = mgr.getState();
     if (currentState.initialized) {
-        // Manager already initialized (late mount) – sync all UI
         syncAll();
     } else {
-        // First widget to mount – show loading and trigger init
-        setLoading(true);
-        mgr.init();
+        // Show placeholder UI — no data fetch until user interacts
+        setLoading(false);
     }
 })();
 </script>

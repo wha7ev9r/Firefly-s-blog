@@ -618,7 +618,15 @@ const bannerCarouselInterval = Math.max(
                 }
             });
 
-            startCarousel();
+            // 延迟启动轮播，不抢主线
+            function scheduleCarousel() {
+                if (typeof requestIdleCallback !== "undefined") {
+                    requestIdleCallback(startCarousel, { timeout: 4000 });
+                } else {
+                    setTimeout(startCarousel, 2500);
+                }
+            }
+            scheduleCarousel();
         })();
     </script>
     
