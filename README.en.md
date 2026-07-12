@@ -113,8 +113,8 @@ If you have useful features and optimizations, please submit a [Pull Request](ht
 2. **Install dependencies:**
 
    ```bash
-   # Install pnpm if not installed
-   npm install -g pnpm
+   # Install the repository-required pnpm version if not installed
+   npm install -g pnpm@9.14.4
 
    # Install project dependencies
    pnpm install
@@ -279,13 +279,13 @@ Under the MIT license, you are free to use, modify, and distribute the code, but
 Thanks to the following contributors for their contributions to this project. If you have any questions or suggestions, please submit an [Issue](https://github.com/CuteLeaf/Firefly/issues) or [Pull Request](https://github.com/CuteLeaf/Firefly/pulls).
 
 > <a href="https://github.com/CuteLeaf/Firefly/graphs/contributors">
->  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" />
+>  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" alt="CuteLeaf/Firefly contributor list" />
 > </a>
 
 Thanks to the following contributors for their contributions to the original project [fuwari](https://github.com/saicaca/fuwari), which laid the foundation for this project.
 
 > <a href="https://github.com/saicaca/fuwari/graphs/contributors">
->  <img src="https://contrib.rocks/image?repo=saicaca/fuwari" />
+>  <img src="https://contrib.rocks/image?repo=saicaca/fuwari" alt="saicaca/fuwari contributor list" />
 > </a>
 
 ## ⭐ Star History

@@ -11,6 +11,7 @@ import { i18n } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { getRelatedPosts, getSortedPosts } from "@utils/content-utils";
 import {
+	getCategoryUrl,
 	getFileDirFromPath,
 	getPostUrlBySlug,
 	removeFileExtension,
@@ -122,11 +123,15 @@ const jsonLd = {
 		url: Astro.site,
 	},
 	datePublished: formatDateToYYYYMMDD(entry.data.published),
-	dateModified: entry.data.updated ? formatDateToYYYYMMDD(entry.data.updated) : undefined,
-	image: posterCoverUrl ? {
-		"@type": "ImageObject",
-		url: new URL(posterCoverUrl, Astro.site).href,
-	} : undefined,
+	dateModified: entry.data.updated
+		? formatDateToYYYYMMDD(entry.data.updated)
+		: undefined,
+	image: posterCoverUrl
+		? {
+				"@type": "ImageObject",
+				url: new URL(posterCoverUrl, Astro.site).href,
+			}
+		: undefined,
 	inLanguage: entry.data.lang
 		? entry.data.lang.replace("_", "-")
 		: siteConfig.lang.replace("_", "-"),
@@ -145,14 +150,19 @@ const breadcrumbLd = {
 		{
 			"@type": "ListItem",
 			position: 2,
-			name: entry.data.category || "Posts",
-			item: new URL(`/archive/`, siteConfig.site_url).href,
+			name: entry.data.category || i18n(I18nKey.archive),
+			item: entry.data.category
+				? new URL(getCategoryUrl(entry.data.category), siteConfig.site_url).href
+				: new URL("/archive/", siteConfig.site_url).href,
 		},
 		{
 			"@type": "ListItem",
 			position: 3,
 			name: entry.data.title,
-			item: new URL(`/posts/${entry.id}/`, siteConfig.site_url).href,
+			item: new URL(
+				`/posts/${removeFileExtension(entry.id)}/`,
+				siteConfig.site_url,
+			).href,
 		},
 	],
 };

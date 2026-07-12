@@ -103,7 +103,7 @@
    cd Firefly
    ```
 
-   **先 [Fork](https://github.com/CuteLeaf/Firefly/fork) 到自己仓库在克隆（推荐），记得先点 Star 在 Fork 哦！**
+   **先 [Fork](https://github.com/CuteLeaf/Firefly/fork) 到自己仓库再克隆（推荐），记得先点 Star 在 Fork 哦！**
 
    ```bash
    git clone https://github.com/you-github-name/Firefly.git
@@ -113,8 +113,8 @@
 2. **安装依赖：**
 
    ```bash
-   # 如果没有安装 pnpm，先安装
-   npm install -g pnpm
+   # 如果没有安装 pnpm，先安装仓库要求的版本
+   npm install -g pnpm@9.14.4
 
    # 安装项目依赖
    pnpm install
@@ -279,13 +279,13 @@ comment: true # 是否允许评论
 感谢以下贡献者对本项目做出的贡献，如有问题或建议，请提交 [Issue](https://github.com/CuteLeaf/Firefly/issues) 或 [Pull Request](https://github.com/CuteLeaf/Firefly/pulls)。
 
 > <a href="https://github.com/CuteLeaf/Firefly/graphs/contributors">
->  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" />
+>  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" alt="CuteLeaf/Firefly 贡献者列表" />
 > </a>
 
 感谢以下贡献者对原项目 [fuwari](https://github.com/saicaca/fuwari) 做出的贡献，为本项目奠定了基础。
 
 > <a href="https://github.com/saicaca/fuwari/graphs/contributors">
->  <img src="https://contrib.rocks/image?repo=saicaca/fuwari" />
+>  <img src="https://contrib.rocks/image?repo=saicaca/fuwari" alt="saicaca/fuwari 贡献者列表" />
 > </a>
 
 ## ⭐ Star History

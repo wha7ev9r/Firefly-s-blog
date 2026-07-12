@@ -3,6 +3,7 @@ const STATIC_ASSETS = [
 	"/",
 	"/favicon/favicon.ico",
 	"/favicon/favicon-light-192.png",
+	"/favicon/favicon-light-512.png",
 	"/manifest.webmanifest",
 ];
 
@@ -20,12 +21,14 @@ self.addEventListener("activate", (event) => {
 			.then((cacheNames) =>
 				Promise.all(
 					cacheNames
-						.filter((name) => name !== CACHE_NAME)
+						.filter(
+							(name) => name.startsWith("firefly-blog-") && name !== CACHE_NAME,
+						)
 						.map((name) => caches.delete(name)),
 				),
-			),
+			)
+			.then(() => self.clients.claim()),
 	);
-	self.clients.claim();
 });
 
 self.addEventListener("fetch", (event) => {
@@ -54,10 +57,12 @@ self.addEventListener("fetch", (event) => {
 		event.respondWith(
 			fetch(request)
 				.then((response) => {
-					const responseClone = response.clone();
-					caches
-						.open(CACHE_NAME)
-						.then((cache) => cache.put(request, responseClone));
+					if (response.ok) {
+						const responseClone = response.clone();
+						caches
+							.open(CACHE_NAME)
+							.then((cache) => cache.put(request, responseClone));
+					}
 					return response;
 				})
 				.catch(() =>

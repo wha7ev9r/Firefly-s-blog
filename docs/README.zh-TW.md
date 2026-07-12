@@ -113,8 +113,8 @@
 2. **安裝依賴：**
 
    ```bash
-   # 如果沒有安裝 pnpm，先安裝
-   npm install -g pnpm
+   # 如果沒有安裝 pnpm，先安裝倉庫要求的版本
+   npm install -g pnpm@9.14.4
 
    # 安裝專案依賴
    pnpm install
@@ -279,13 +279,13 @@ comment: true # 是否允許留言
 感謝以下貢獻者對本專案做出的貢獻，如有問題或建議，請提交 [Issue](https://github.com/CuteLeaf/Firefly/issues) 或 [Pull Request](https://github.com/CuteLeaf/Firefly/pulls)。
 
 > <a href="https://github.com/CuteLeaf/Firefly/graphs/contributors">
->  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" />
+>  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" alt="CuteLeaf/Firefly 貢獻者列表" />
 > </a>
 
 感謝以下貢獻者對原專案 [fuwari](https://github.com/saicaca/fuwari) 做出的貢獻，為本專案奠定了基礎。
 
 > <a href="https://github.com/saicaca/fuwari/graphs/contributors">
->  <img src="https://contrib.rocks/image?repo=saicaca/fuwari" />
+>  <img src="https://contrib.rocks/image?repo=saicaca/fuwari" alt="saicaca/fuwari 貢獻者列表" />
 > </a>
 
 ## ⭐ Star History

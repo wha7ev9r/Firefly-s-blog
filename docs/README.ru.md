@@ -113,8 +113,8 @@
 2. **Установить зависимости:**
 
    ```bash
-   # Установите pnpm, если еще не установлен
-   npm install -g pnpm
+   # Установите требуемую репозиторием версию pnpm, если еще не установлена
+   npm install -g pnpm@9.14.4
 
    # Установить зависимости проекта
    pnpm install
@@ -279,13 +279,13 @@ comment: true # Включить комментарии
 Спасибо следующим участникам за их вклад в этот проект. Если у вас есть вопросы или предложения, пожалуйста, отправьте [Issue](https://github.com/CuteLeaf/Firefly/issues) или [Pull Request](https://github.com/CuteLeaf/Firefly/pulls).
 
 > <a href="https://github.com/CuteLeaf/Firefly/graphs/contributors">
->  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" />
+>  <img src="https://contrib.rocks/image?repo=CuteLeaf/Firefly" alt="CuteLeaf/Firefly contributor list" />
 > </a>
 
 Спасибо следующим участникам за их вклад в исходный проект [fuwari](https://github.com/saicaca/fuwari), который заложил основу для этого проекта.
 
 > <a href="https://github.com/saicaca/fuwari/graphs/contributors">
->  <img src="https://contrib.rocks/image?repo=saicaca/fuwari" />
+>  <img src="https://contrib.rocks/image?repo=saicaca/fuwari" alt="saicaca/fuwari contributor list" />
 > </a>
 
 ## ⭐ История звезд
