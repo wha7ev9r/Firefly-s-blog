@@ -120,6 +120,18 @@ const siteLang = lang.replace("_", "-");
       })()
     }
     {siteConfig.analytics?.googleAnalyticsId && (
+      <link rel="preconnect" href="https://www.googletagmanager.com" />
+    )}
+    {siteConfig.analytics?.microsoftClarityId && (
+      <link rel="preconnect" href="https://www.clarity.ms" />
+    )}
+    {siteConfig.analytics?.umamiAnalytics?.websiteId && (
+      <link rel="preconnect" href="https://cloud.umami.is" />
+    )}
+    {siteConfig.analytics?.la51Analytics?.Id && (
+      <link rel="preconnect" href="https://sdk.51.la" />
+    )}
+    {siteConfig.analytics?.googleAnalyticsId && (
             <GoogleAnalytics analyticsId={siteConfig.analytics.googleAnalyticsId} />
     )}
     {siteConfig.analytics?.microsoftClarityId && (
