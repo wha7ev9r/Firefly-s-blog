@@ -1,6 +1,6 @@
 <script lang="ts">
 import QRCode from "qrcode";
-import { onMount } from "svelte";
+import { onMount, tick } from "svelte";
 import Icon from "@/components/common/Icon.svelte";
 import I18nKey from "../../i18n/i18nKey";
 import { i18n } from "../../i18n/translation";
@@ -18,6 +18,30 @@ let showModal = false;
 let posterImage: string | null = null;
 let generating = false;
 let themeColor = "#558e88"; // Default blue
+let modalElement: HTMLDivElement | null = null;
+let previousFocus: HTMLElement | null = null;
+
+function handleKeydown(event: KeyboardEvent) {
+	if (event.key === "Escape") {
+		closeModal();
+		return;
+	}
+	if (event.key === "Tab" && modalElement) {
+		const focusable = modalElement.querySelectorAll<HTMLElement>(
+			'button:not([disabled]), a[href], input, [tabindex]:not([tabindex="-1"])',
+		);
+		if (focusable.length === 0) return;
+		const first = focusable[0];
+		const last = focusable[focusable.length - 1];
+		if (event.shiftKey && document.activeElement === first) {
+			event.preventDefault();
+			last.focus();
+		} else if (!event.shiftKey && document.activeElement === last) {
+			event.preventDefault();
+			first.focus();
+		}
+	}
+}
 
 onMount(() => {
 	// Get theme color from CSS variable
@@ -455,6 +479,20 @@ function downloadPoster() {
 
 function closeModal() {
 	showModal = false;
+	if (previousFocus) {
+		previousFocus.focus();
+		previousFocus = null;
+	}
+}
+
+function focusOnMount(node: HTMLElement) {
+	previousFocus = document.activeElement as HTMLElement;
+	tick().then(() => node.focus());
+	return {
+		destroy() {
+			modalElement = null;
+		},
+	};
 }
 
 let copied = false;
@@ -495,11 +533,11 @@ function portal(node: HTMLElement) {
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div use:portal class="fixed inset-0 z-9999 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 transition-opacity" on:click={closeModal}>
-    <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-[440px] w-full max-h-[90vh] overflow-y-auto flex flex-col shadow-2xl transform transition-all" on:click={(e) => e.stopPropagation()}>
+    <div bind:this={modalElement} role="dialog" aria-modal="true" aria-label={i18n(I18nKey.shareArticle)} tabindex="-1" class="bg-white dark:bg-gray-800 rounded-2xl max-w-[440px] w-full max-h-[90vh] overflow-y-auto flex flex-col shadow-2xl transform transition-all" on:click={(e) => e.stopPropagation()} on:keydown={handleKeydown} use:focusOnMount>
       
       <div class="p-6 flex justify-center bg-gray-50 dark:bg-gray-900 min-h-[200px] items-center">
         {#if posterImage}
-          <img src={posterImage} alt="Poster" class="max-w-full h-auto shadow-lg rounded-lg" />
+          <img src={posterImage} alt={i18n(I18nKey.shareArticle) + ": " + title} class="max-w-full h-auto shadow-lg rounded-lg" />
         {:else}
            <div class="flex flex-col items-center gap-3">
              <div class="w-8 h-8 border-2 border-gray-200 rounded-full animate-spin" style="border-top-color: {themeColor}"></div>

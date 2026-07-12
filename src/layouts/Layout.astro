@@ -26,6 +26,8 @@ import { defaultFavicons } from "@/constants/icon";
 import type { Favicon } from "@/types/config";
 import { getDefaultBackground, isHomePage } from "@/utils/layout-utils";
 import { url } from "@/utils/url-utils";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
 
 import "@/styles/main.css";
 import "@/styles/variables.styl";
@@ -588,6 +590,7 @@ const siteLang = lang.replace("_", "-");
     ]}
   >
 
+    <a href="#swup-container" class="skip-link">{i18n(I18nKey.skipToContent)}</a>
     <div id="progress-bar"></div>
 
     <!-- 页面顶部渐变高光效果 - 只在full和semifull模式下显示 -->

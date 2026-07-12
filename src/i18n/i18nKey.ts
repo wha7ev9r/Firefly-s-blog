@@ -324,6 +324,12 @@ enum I18nKey {
 	passwordSubmit = "passwordSubmit",
 	passwordError = "passwordError",
 	passwordProtectedRss = "passwordProtectedRss",
+
+	// 无障碍
+	skipToContent = "skipToContent",
+	closeToc = "closeToc",
+	displaySettings = "displaySettings",
+	navMenu = "navMenu",
 }
 
 export default I18nKey;
