@@ -123,10 +123,11 @@ onMount(() => {
 			});
 
 			// Deferred load — use idle time, fallback to setTimeout
-			const dyanmicImport = new Function("url", "return import(url)");
 			const loadPagefind = async () => {
 				try {
-					const mod = await dyanmicImport("/pagefind/pagefind.js");
+					const mod = await import(
+						/* @vite-ignore */ formatUrl("/pagefind/pagefind.js")
+					);
 					await mod.options({ excerptLength: 20 });
 					window.pagefind = mod;
 					document.dispatchEvent(new CustomEvent("pagefindready"));

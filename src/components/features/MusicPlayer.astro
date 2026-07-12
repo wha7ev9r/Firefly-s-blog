@@ -544,20 +544,22 @@ const widgetId =
     ui.btnRepeat.addEventListener('click', function () {
         ensureInit().then(function () { mgr.cyclePlayMode(); });
     });
-    ui.btnMute.addEventListener('click', function () { mgr.toggleMute(); });
+    ui.btnMute.addEventListener('click', function () {
+        ensureInit().then(function () { mgr.toggleMute(); });
+    });
 
     ui.volContainer.addEventListener('click', function (e) {
         var rect = ui.volContainer.getBoundingClientRect();
         var x = e.clientX - rect.left;
         var val = Math.max(0, Math.min(1, x / rect.width));
-        mgr.setVolume(val);
+        ensureInit().then(function () { mgr.setVolume(val); });
     });
 
     ui.progressContainer.addEventListener('click', function (e) {
         var rect = ui.progressContainer.getBoundingClientRect();
         var clickX = e.clientX - rect.left;
         var percent = Math.min(Math.max(clickX / rect.width, 0), 1);
-        mgr.seek(percent);
+        ensureInit().then(function () { mgr.seek(percent); });
     });
 
     // ── Drawer logic (local state) ───────────────────────────
