@@ -8,7 +8,7 @@
 
 ## 📫 联系方式
 
-- 💻 **GitHub**: [ksbbs](https://github.com/wha7ev9r)
+- 💻 **GitHub**: [wha7ever](https://github.com/wha7ev9r)
 
 ---
 
