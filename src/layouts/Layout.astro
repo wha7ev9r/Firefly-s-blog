@@ -236,6 +236,13 @@ const siteLang = lang.replace("_", "-");
         />
       ))
     }
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content={siteConfig.themeColor.hue ? `hsl(${siteConfig.themeColor.hue}, 50%, 45%)` : "#558e88"} />
+    <link rel="apple-touch-icon" href="/favicon/favicon-light-180.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content={siteConfig.title} />
+    <meta name="mobile-web-app-capable" content="yes" />
 
     <!-- 为特定域名的图片添加 referrerpolicy 以解决 403 问题 -->
     {siteConfig.imageOptimization?.noReferrerDomains &&
@@ -1426,5 +1433,13 @@ const siteLang = lang.replace("_", "-");
     initWallpaperMode();
     initThemeListener();
     initIconLoader();
+  }
+</script>
+
+<script is:inline>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    });
   }
 </script>

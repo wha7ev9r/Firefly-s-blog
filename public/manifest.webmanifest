@@ -1,0 +1,23 @@
+{
+  "name": "萤火星海",
+  "short_name": "萤火星海",
+  "description": "萤火星海 - Wha7ever 的个人博客，记录生活，分享美好。点燃星海，绽放光芒。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#558e88",
+  "icons": [
+    {
+      "src": "/favicon/favicon-light-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon/favicon-light-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
