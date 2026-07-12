@@ -340,4 +340,9 @@ export const en: Translation = {
 	[Key.passwordError]: "Incorrect password, please try again.",
 	[Key.passwordProtectedRss]:
 		"This article is encrypted. Please visit the website to view it.",
+
+	[Key.skipToContent]: "Skip to main content",
+	[Key.closeToc]: "Close table of contents",
+	[Key.displaySettings]: "Display settings",
+	[Key.navMenu]: "Navigation menu",
 };

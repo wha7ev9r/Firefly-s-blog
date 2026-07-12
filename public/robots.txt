@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://www.wha7ever.qzz.io/sitemap-index.xml

@@ -330,4 +330,9 @@ export const zh_TW: Translation = {
 	[Key.passwordSubmit]: "解鎖",
 	[Key.passwordError]: "密碼錯誤，請重試。",
 	[Key.passwordProtectedRss]: "本文已加密保護，請訪問網站查看。",
+
+	[Key.skipToContent]: "跳到主內容",
+	[Key.closeToc]: "關閉目錄",
+	[Key.displaySettings]: "顯示設定",
+	[Key.navMenu]: "導航選單",
 };

@@ -24,12 +24,12 @@ const sidebarPosition = sidebarLayoutConfig.position;
 <!-- 悬浮TOC按钮 -->
 <div id="floating-toc-wrapper" class="floating-toc-wrapper" data-is-sidebar-toc-enabled={String(isSidebarTocEnabled)} data-sidebar-position={sidebarPosition} data-show-both-sidebars-on-post={String(sidebarLayoutConfig.showBothSidebarsOnPostPage ?? false)}>
   <FloatingButton
-    id="floating-toc-btn"
-    icon="material-symbols:format-list-bulleted"
-    ariaLabel="Table of Contents"
-    onclick="window.toggleFloatingTOC()"
-    class="hide"
-  />
+		id="floating-toc-btn"
+		icon="material-symbols:format-list-bulleted"
+		ariaLabel={i18n(I18nKey.tableOfContents)}
+		onclick="window.toggleFloatingTOC()"
+		class="hide"
+	/>
   
   <!-- 悬浮TOC面板 - 移到 Wrapper 内部以便相对定位 -->
   <div
@@ -49,7 +49,7 @@ const sidebarPosition = sidebarLayoutConfig.position;
         </h3>
         <button
             onclick="window.toggleFloatingTOC()"
-            aria-label="Close TOC"
+            aria-label={i18n(I18nKey.closeToc)}
             class="btn-plain rounded-lg h-8 w-8 active:scale-90"
         >
             <Icon name="material-symbols:close" class="text-lg" />
@@ -88,17 +88,17 @@ const sidebarPosition = sidebarLayoutConfig.position;
 	backdrop-filter: blur(20px)
 	-webkit-backdrop-filter: blur(20px)
 	z-index: 1001
-	
-	&.show
-		transform: translateY(0)
-		opacity: 1
-		pointer-events: auto
-		
-	&.hide
-		transform: translateY(20px)
-		opacity: 0
-		pointer-events: none
-		visibility: hidden
+
+.floating-toc-panel.show
+	transform: translateY(0)
+	opacity: 1
+	pointer-events: auto
+
+.floating-toc-panel.hide
+	transform: translateY(20px)
+	opacity: 0
+	pointer-events: none
+	visibility: hidden
 		
 .toc-scroll-container
 	max-height: calc(24rem - 5rem)

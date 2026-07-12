@@ -23,6 +23,8 @@ import {
 	PAGE_WIDTH,
 } from "@/constants/constants";
 import { defaultFavicons } from "@/constants/icon";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
 import type { Favicon } from "@/types/config";
 import { getDefaultBackground, isHomePage } from "@/utils/layout-utils";
 import { url } from "@/utils/url-utils";
@@ -39,10 +41,24 @@ interface Props {
 	lang?: string;
 	setOGTypeArticle?: boolean;
 	postSlug?: string;
+	publishedTime?: Date;
+	modifiedTime?: Date;
+	tags?: string[];
+	articleImage?: string;
 }
 
-let { title, banner, description, lang, setOGTypeArticle, postSlug } =
-	Astro.props;
+let {
+	title,
+	banner,
+	description,
+	lang,
+	setOGTypeArticle,
+	postSlug,
+	publishedTime,
+	modifiedTime,
+	tags,
+	articleImage,
+} = Astro.props;
 
 // apply a class to the body element to decide the height of the banner, only used for initial page load
 // Swup can update the body for each page visit, but it's after the page transition, causing a delay for banner height change
@@ -116,6 +132,18 @@ const siteLang = lang.replace("_", "-");
       })()
     }
     {siteConfig.analytics?.googleAnalyticsId && (
+      <link rel="preconnect" href="https://www.googletagmanager.com" />
+    )}
+    {siteConfig.analytics?.microsoftClarityId && (
+      <link rel="preconnect" href="https://www.clarity.ms" />
+    )}
+    {siteConfig.analytics?.umamiAnalytics?.websiteId && (
+      <link rel="preconnect" href="https://cloud.umami.is" />
+    )}
+    {siteConfig.analytics?.la51Analytics?.Id && (
+      <link rel="preconnect" href="https://sdk.51.la" />
+    )}
+    {siteConfig.analytics?.googleAnalyticsId && (
             <GoogleAnalytics analyticsId={siteConfig.analytics.googleAnalyticsId} />
     )}
     {siteConfig.analytics?.microsoftClarityId && (
@@ -149,6 +177,7 @@ const siteLang = lang.replace("_", "-");
       )
     }
     <meta name="author" content={profileConfig.name} />
+    <link rel="canonical" href={Astro.url} />
 
     <meta property="og:site_name" content={siteConfig.title} />
     <meta property="og:url" content={Astro.url} />
@@ -157,7 +186,9 @@ const siteLang = lang.replace("_", "-");
       property="og:description"
       content={description || siteConfig.description || pageTitle}
     />
-    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+				{(articleImage || ogImageUrl) && (
+					<meta property="og:image" content={articleImage || ogImageUrl} />
+				)}
     {
       setOGTypeArticle ? (
         <meta property="og:type" content="article" />
@@ -165,7 +196,15 @@ const siteLang = lang.replace("_", "-");
         <meta property="og:type" content="website" />
       )
     }
-
+    {setOGTypeArticle && publishedTime && (
+      <meta property="article:published_time" content={publishedTime.toISOString()} />
+    )}
+    {setOGTypeArticle && modifiedTime && (
+      <meta property="article:modified_time" content={modifiedTime.toISOString()} />
+    )}
+    {setOGTypeArticle && tags && tags.length > 0 && tags.map((tag) => (
+      <meta property="article:tag" content={tag} />
+    ))}
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={Astro.url} />
     <meta name="twitter:title" content={pageTitle} />
@@ -173,6 +212,25 @@ const siteLang = lang.replace("_", "-");
       name="twitter:description"
       content={description || siteConfig.description || pageTitle}
     />
+    {(ogImageUrl || articleImage) && (
+      <meta name="twitter:image" content={articleImage || ogImageUrl} />
+    )}
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: siteConfig.title,
+      url: siteConfig.site_url,
+      description: siteConfig.description,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: new URL("/search/", siteConfig.site_url).href + "?q={search_term_string}",
+        },
+        "query-input": "required name=search_term_string",
+      },
+    })} />
 
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
@@ -186,6 +244,13 @@ const siteLang = lang.replace("_", "-");
         />
       ))
     }
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content={siteConfig.themeColor.hue ? `hsl(${siteConfig.themeColor.hue}, 50%, 45%)` : "#558e88"} />
+    <link rel="apple-touch-icon" href="/favicon/favicon-light-180.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content={siteConfig.title} />
+    <meta name="mobile-web-app-capable" content="yes" />
 
     <!-- 为特定域名的图片添加 referrerpolicy 以解决 403 问题 -->
     {siteConfig.imageOptimization?.noReferrerDomains &&
@@ -540,6 +605,7 @@ const siteLang = lang.replace("_", "-");
     ]}
   >
 
+    <a href="#swup-container" class="skip-link">{i18n(I18nKey.skipToContent)}</a>
     <div id="progress-bar"></div>
 
     <!-- 页面顶部渐变高光效果 - 只在full和semifull模式下显示 -->
@@ -697,37 +763,6 @@ const siteLang = lang.replace("_", "-");
   // 		console.log("Failed to load fonts:", error);
   // 	}
   // })();
-
-  /* TODO This is a temporary solution for style flicker issue when the transition is activated */
-  /* issue link: https://github.com/withastro/astro/issues/8711, the solution get from here too */
-  /* update: fixed in Astro 3.2.4 */
-  /*
-function disableAnimation() {
-	const css = document.createElement('style')
-	css.appendChild(
-		document.createTextNode(
-			`*{
-              -webkit-transition:none!important;
-              -moz-transition:none!important;
-              -o-transition:none!important;
-              -ms-transition:none!important;
-              transition:none!important
-              }`
-		)
-	)
-	document.head.appendChild(css)
-
-	return () => {
-		// Force restyle
-		;(() => window.getComputedStyle(document.body))()
-
-		// Wait for next tick before removing
-		setTimeout(() => {
-			document.head.removeChild(css)
-		}, 1)
-	}
-}
-*/
 
   const bannerEnabled = !!document.getElementById("wallpaper-wrapper");
   const stickyNavbar = siteConfig.navbar.stickyNavbar ?? false;
@@ -1406,5 +1441,13 @@ function disableAnimation() {
     initWallpaperMode();
     initThemeListener();
     initIconLoader();
+  }
+</script>
+
+<script is:inline>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    });
   }
 </script>
