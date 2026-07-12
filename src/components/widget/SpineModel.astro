@@ -390,10 +390,18 @@ import { url } from "@/utils/url-utils";
   // 监听窗口大小变化
   window.addEventListener("resize", updateResponsiveDisplay);
 
-  // 页面加载完成后初始化（只初始化一次）
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initSpineModel);
-  } else {
-    initSpineModel();
+  // 页面空闲后初始化（只初始化一次），延迟首屏主线压力
+  function scheduleInit() {
+    if (typeof requestIdleCallback !== "undefined") {
+      requestIdleCallback(initSpineModel, { timeout: 3000 });
+    } else if (document.readyState === "complete") {
+      setTimeout(initSpineModel, 2000);
+    } else {
+      window.addEventListener("load", function () {
+        setTimeout(initSpineModel, 1000);
+      });
+    }
   }
+
+  scheduleInit();
 </script>

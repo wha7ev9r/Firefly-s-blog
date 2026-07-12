@@ -113,16 +113,38 @@ onMount(() => {
 		initializePagefind();
 	} else {
 		if (window.pagefind) {
-			// If script already loaded
 			initializePagefind();
 		} else {
-			// Listen for the event
 			document.addEventListener("pagefindready", initializePagefind, {
 				once: true,
 			});
 			document.addEventListener("pagefindloaderror", initializePagefind, {
 				once: true,
 			});
+
+			// Deferred load — use idle time, fallback to setTimeout
+			const loadPagefind = async () => {
+				try {
+					const mod = await import(
+						/* @vite-ignore */ formatUrl("/pagefind/pagefind.js")
+					);
+					await mod.options({ excerptLength: 20 });
+					window.pagefind = mod;
+					document.dispatchEvent(new CustomEvent("pagefindready"));
+				} catch {
+					window.pagefind = {
+						search: () => Promise.resolve({ results: [] }),
+						options: () => Promise.resolve(),
+					};
+					document.dispatchEvent(new CustomEvent("pagefindloaderror"));
+				}
+			};
+
+			if (typeof requestIdleCallback !== "undefined") {
+				requestIdleCallback(() => loadPagefind(), { timeout: 3000 });
+			} else {
+				setTimeout(loadPagefind, 2000);
+			}
 		}
 	}
 });

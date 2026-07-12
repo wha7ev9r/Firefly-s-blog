@@ -36,33 +36,21 @@ import { url } from "@/utils/url-utils";
     const existingLink = document.querySelector('link[href*="spine-player"]');
     if (existingLink) return;
 
-    // 首先尝试加载 CDN CSS
-    const cdnLink = document.createElement("link");
-    cdnLink.rel = "stylesheet";
-    cdnLink.href =
-      "https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/spine-player.min.css";
-
-    // 监听加载失败事件，自动回退到本地文件
-    cdnLink.onerror = function () {
-      console.warn("⚠️ Spine CSS CDN failed, trying local fallback...");
-
-      // 移除失败的 CDN link
-      if (cdnLink.parentNode) {
-        cdnLink.parentNode.removeChild(cdnLink);
-      }
-
-      // 创建本地备用 CSS link
-      const localLink = document.createElement("link");
-      localLink.rel = "stylesheet";
-      localLink.href = cssPath;
-      localLink.onerror = function () {
-        console.error("❌ Failed to load Spine CSS");
-      };
-
-      document.head.appendChild(localLink);
+    // 优先使用本地 CSS，减少 CDN 冷启动
+    const localLink = document.createElement("link");
+    localLink.rel = "stylesheet";
+    localLink.href = cssPath;
+    localLink.onerror = function () {
+      // 本地失败时尝试 CDN 回退
+      console.warn("⚠️ Spine CSS local failed, trying CDN fallback...");
+      const cdnLink = document.createElement("link");
+      cdnLink.rel = "stylesheet";
+      cdnLink.href =
+        "https://unpkg.com/@esotericsoftware/spine-player@4.2.119/dist/spine-player.min.css";
+      document.head.appendChild(cdnLink);
     };
 
-    document.head.appendChild(cdnLink);
+    document.head.appendChild(localLink);
   }
 
   // 消息框功能已移至公共组件 MessageBox.astro
@@ -171,27 +159,20 @@ import { url } from "@/utils/url-utils";
         }
 
         console.log("📦 Loading Spine runtime...");
+        // 优先本地，减少 CDN 冷启动
         const script = document.createElement("script");
-        script.src =
-          "https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/iife/spine-player.min.js";
+        script.src = jsPath;
         script.onload = () => {
-          console.log("✅ Spine runtime loaded from CDN");
           resolve();
         };
-        script.onerror = (_error) => {
-          console.warn("⚠️ CDN failed, trying local fallback...");
-
-          // 尝试本地回退
-          const fallbackScript = document.createElement("script");
-          fallbackScript.src = jsPath;
-          fallbackScript.onload = () => {
-            console.log("✅ Spine runtime loaded from local fallback");
-            resolve();
-          };
-          fallbackScript.onerror = () => {
-            reject(new Error("Failed to load Spine runtime"));
-          };
-          document.head.appendChild(fallbackScript);
+        script.onerror = () => {
+          console.warn("⚠️ Spine local failed, trying CDN fallback...");
+          const cdnScript = document.createElement("script");
+          cdnScript.src =
+            "https://unpkg.com/@esotericsoftware/spine-player@4.2.119/dist/iife/spine-player.min.js";
+          cdnScript.onload = () => resolve();
+          cdnScript.onerror = () => reject(new Error("Failed to load Spine runtime"));
+          document.head.appendChild(cdnScript);
         };
         document.head.appendChild(script);
       });
@@ -390,10 +371,18 @@ import { url } from "@/utils/url-utils";
   // 监听窗口大小变化
   window.addEventListener("resize", updateResponsiveDisplay);
 
-  // 页面加载完成后初始化（只初始化一次）
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initSpineModel);
-  } else {
-    initSpineModel();
+  // 页面空闲后初始化（只初始化一次），延迟首屏主线压力
+  function scheduleInit() {
+    if (typeof requestIdleCallback !== "undefined") {
+      requestIdleCallback(initSpineModel, { timeout: 3000 });
+    } else if (document.readyState === "complete") {
+      setTimeout(initSpineModel, 2000);
+    } else {
+      window.addEventListener("load", function () {
+        setTimeout(initSpineModel, 1000);
+      });
+    }
   }
+
+  scheduleInit();
 </script>
