@@ -1,5 +1,5 @@
 ---
-title: 含绝对值二次函数 $f(x)=|ax^2+bx|$ 单调性通用解题技巧
+title: 含绝对值二次函数 f(x)=|ax^2+bx| 单调性通用解题技巧
 published: 2026-07-13 21:13:00
 updated: 2026-07-13 21:13:00
 draft: false
