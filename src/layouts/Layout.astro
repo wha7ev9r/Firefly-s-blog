@@ -957,6 +957,7 @@ const siteLang = lang.replace("_", "-");
         }
       }
 
+      document.dispatchEvent(new Event("swup:contentReplaced"));
     });
     window.swup.hooks.on("visit:start", (visit: { to: { url: string } }) => {
       // Start progress bar
@@ -1175,6 +1176,7 @@ const siteLang = lang.replace("_", "-");
   };
   if (window?.swup?.hooks) {
     setup();
+    document.dispatchEvent(new Event("swup:enable"));
   } else {
     document.addEventListener("swup:enable", setup);
   }

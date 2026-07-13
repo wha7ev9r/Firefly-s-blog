@@ -184,6 +184,9 @@ function renderRandomPosts() {
       .then(function(data) {
         window.__allPostMetaCache = data;
         render(data);
+      })
+      .catch(function(err) {
+        console.error("Failed to load random posts:", err);
       });
   }
 }
