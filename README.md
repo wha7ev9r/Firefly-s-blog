@@ -225,6 +225,7 @@ comment: true # 是否允许评论
 2. **发布上线** — 修改完成后，在 Pages CMS 侧边栏点击 **"发布到生产环境"** 按钮
    - 自动触发 GitHub Actions 将 `staging` 分支合并到 `master`
    - Vercel 检测到 `master` 变更后自动构建部署
+3. **自动同步** — 当 `master` 通过其他方式（如 PR 合并）更新时，会通过 GitHub Actions 自动合并到 `staging`，保持两个分支同步
 
 ### 首次使用
 
