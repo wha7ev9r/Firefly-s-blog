@@ -7,7 +7,7 @@
 > 一款清新美观的 Astro 静态博客主题模板
 >
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen)
-> ![pnpm >= 9](https://img.shields.io/badge/pnpm-%3E%3D9-blue)
+> ![pnpm >= 11](https://img.shields.io/badge/pnpm-%3E%3D11-blue)
 > ![Astro](https://img.shields.io/badge/Astro-7.0.7-orange)
 > ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)
 >
@@ -92,7 +92,7 @@
 ### 环境要求
 
 - Node.js ≥ 22
-- pnpm ≥ 9
+- pnpm ≥ 11
 
 ### 本地开发部署
 
@@ -114,7 +114,7 @@
 
    ```bash
    # 如果没有安装 pnpm，先安装仓库要求的版本
-   npm install -g pnpm@9.14.4
+   npm install -g pnpm@11.14.0
 
    # 安装项目依赖
    pnpm install
