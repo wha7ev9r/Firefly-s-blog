@@ -316,6 +316,19 @@ const siteLang = lang.replace("_", "-");
       </script>
     )}
 
+    <!-- Inline background and color-scheme to avoid white flash before CSS loads -->
+    <style is:inline>
+      html {
+        --page-bg: oklch(0.95 0.01 var(--hue, 165));
+        background-color: var(--page-bg);
+        color-scheme: light;
+      }
+      html.dark {
+        --page-bg: oklch(0.16 0.014 var(--hue, 165));
+        color-scheme: dark;
+      }
+    </style>
+
     <!-- Set the theme before the page is rendered to avoid a flash -->
     <script
       is:inline

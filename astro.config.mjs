@@ -63,7 +63,11 @@ export default defineConfig({
 			cache: true,
 			preload: true,
 			accessibility: true,
-			updateHead: true,
+			updateHead: {
+				awaitAssets: true,
+				persistAssets: true,
+				persistTags: false,
+			},
 			updateBodyClass: false,
 			globalInstance: true,
 			// 滚动相关配置优化
