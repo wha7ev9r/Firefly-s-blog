@@ -22,7 +22,7 @@ src/config/
 ├── navBarConfig.ts       # 导航栏配置
 ├── pioConfig.ts          # Pio 模型配置
 ├── adConfig.ts           # 广告配置
-├── friendsConfig.ts      # 友链配置
+├── friendsConfig.ts      # 友链配置（页面开关，友链数据在 src/data/friends.csv）
 ├── galleryConfig.ts      # 相册配置
 ├── sponsorConfig.ts      # 赞助配置
 ├── coverImageConfig.ts   # 封面图配置
@@ -32,14 +32,16 @@ src/config/
 ## 🚀 使用方式
 
 ### 推荐：使用配置索引（统一导入）
+
 ```typescript
-import { siteConfig, profileConfig } from '../config';
+import { siteConfig, profileConfig } from "../config";
 ```
 
 ### 直接导入单个配置
+
 ```typescript
-import { siteConfig } from '../config/siteConfig';
-import { profileConfig } from '../config/profileConfig';
+import { siteConfig } from "../config/siteConfig";
+import { profileConfig } from "../config/profileConfig";
 ```
 
 ## 📋 配置文件列表
@@ -59,9 +61,10 @@ import { profileConfig } from '../config/profileConfig';
 - `navBarConfig.ts` - 导航栏配置（链接、样式等）
 - `pioConfig.ts` - Pio 模型配置（Spine、Live2D 等）
 - `adConfig.ts` - 广告配置（广告位设置等）
-- `friendsConfig.ts` - 友链配置（友链列表等）
+- `friendsConfig.ts` - 友链配置（页面行为开关；友链列表数据存放在 `src/data/friends.csv`，可通过 Pages CMS 表格编辑器在线维护）
 - `sponsorConfig.ts` - 赞助配置（赞助方式、二维码等）
 - `coverImageConfig.ts` - 封面图配置（随机封面图列表等）
 
+```
 
 ```

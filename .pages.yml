@@ -47,6 +47,8 @@ content:
       - name: description
         label: 描述
         type: text
+        options:
+          maxlength: 200
       - name: image
         label: 封面图
         type: image
@@ -79,6 +81,9 @@ content:
       - name: sourceLink
         label: 原文链接
         type: string
+        pattern:
+          regex: "^$|^https?://.+"
+          message: "请输入以 http:// 或 https:// 开头的完整链接"
       # 个人博客一般不填写许可信息
       # - name: licenseName
       #   label: 许可名称
@@ -129,6 +134,12 @@ content:
         options:
           format: mdx
 
+  - name: friends-data
+    label: 友链数据
+    type: file
+    path: src/data/friends.csv
+    format: datagrid
+
   - name: guestbook
     label: 留言板
     type: file
@@ -145,6 +156,11 @@ content:
         type: rich-text
         options:
           format: markdown
+
+actions:
+  - name: publish
+    label: 发布到生产环境
+    workflow: publish.yml
 
 settings:
   content:

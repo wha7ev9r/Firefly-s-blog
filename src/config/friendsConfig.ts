@@ -1,3 +1,4 @@
+import friendsCsv from "../data/friends.csv?raw";
 import type { FriendLink, FriendsPageConfig } from "../types/config";
 
 // 可以在src/content/spec/friends.md中编写友链页面下方的自定义内容
@@ -20,19 +21,73 @@ export const friendsPageConfig: FriendsPageConfig = {
 	randomizeSort: false,
 };
 
-// 友链配置
-export const friendsConfig: FriendLink[] = [
-	// 在这里添加你的友链
-	// {
-	// 	title: "友站名称",
-	// 	imgurl: "友站头像URL",
-	// 	desc: "友站描述",
-	// 	siteurl: "友站地址",
-	// 	tags: ["Blog"],
-	// 	weight: 10,
-	// 	enabled: true,
-	// },
-];
+// 解析 CSV 文本（支持双引号包裹、引号转义与字段内换行）
+const parseCsv = (text: string): string[][] => {
+	const rows: string[][] = [];
+	let row: string[] = [];
+	let field = "";
+	let inQuotes = false;
+
+	for (let i = 0; i < text.length; i++) {
+		const char = text[i];
+		if (inQuotes) {
+			if (char === '"') {
+				if (text[i + 1] === '"') {
+					field += '"';
+					i++;
+				} else {
+					inQuotes = false;
+				}
+			} else {
+				field += char;
+			}
+		} else if (char === '"') {
+			inQuotes = true;
+		} else if (char === ",") {
+			row.push(field);
+			field = "";
+		} else if (char === "\n" || char === "\r") {
+			if (char === "\r" && text[i + 1] === "\n") {
+				i++;
+			}
+			row.push(field);
+			field = "";
+			rows.push(row);
+			row = [];
+		} else {
+			field += char;
+		}
+	}
+
+	if (field !== "" || row.length > 0) {
+		row.push(field);
+		rows.push(row);
+	}
+
+	return rows.filter((cells) => cells.some((cell) => cell.trim() !== ""));
+};
+
+// 友链数据来自 src/data/friends.csv，可通过 Pages CMS 的表格编辑器（datagrid）在线维护
+const csvRows = parseCsv(friendsCsv);
+const header = csvRows[0] ?? [];
+const columnIndex = (name: string): number => header.indexOf(name);
+
+export const friendsConfig: FriendLink[] = csvRows.slice(1).map((cells) => {
+	const cell = (name: string): string => cells[columnIndex(name)]?.trim() ?? "";
+
+	return {
+		title: cell("title"),
+		imgurl: cell("imgurl"),
+		desc: cell("desc"),
+		siteurl: cell("siteurl"),
+		tags: cell("tags")
+			.split(";")
+			.map((tag) => tag.trim())
+			.filter(Boolean),
+		weight: Number(cell("weight")) || 0,
+		enabled: cell("enabled").toLowerCase() === "true",
+	};
+});
 
 // 获取启用的友链并进行排序
 export const getEnabledFriends = (): FriendLink[] => {
