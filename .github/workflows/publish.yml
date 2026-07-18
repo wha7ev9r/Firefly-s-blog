@@ -4,6 +4,11 @@ on:
   repository_dispatch:
     types: [publish]
   workflow_dispatch:
+    inputs:
+      payload:
+        description: "Pages CMS 触发时附带的上下文信息（sha、路径等）"
+        required: false
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

@@ -235,9 +235,12 @@ comment: true # 是否允许评论
 
 ### 配置说明
 
-CMS 配置文件为根目录的 `.pages.yml`，定义了可编辑的内容模型和媒体资源路径。
+CMS 配置文件为根目录的 `.pages.yml`，定义了可编辑的内容模型、媒体资源路径，以及 **"发布到生产环境"** 按钮（`actions` 配置，触发 `.github/workflows/publish.yml`）。
 
-> 注意：如果你 Fork 此仓库，`.pages.yml` 中的配置会自动生效，无需额外修改。
+> 注意：
+>
+> - 如果你 Fork 此仓库，`.pages.yml` 中的配置会自动生效，无需额外修改。
+> - Pages CMS 的 `actions` 按钮通过 `workflow_dispatch` 触发工作流时，会强制附带一个 `payload` 输入（包含 sha、条目路径等上下文信息）。因此被触发的工作流必须在 `on.workflow_dispatch.inputs` 中声明 `payload`，否则 GitHub API 会报错 `Unexpected inputs provided: ["payload"]`。
 
 ## 🧩 Markdown 扩展语法
 
