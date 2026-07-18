@@ -213,6 +213,31 @@ comment: true # 是否允许评论
 ---
 ```
 
+## 📝 使用 Pages CMS 管理内容
+
+本仓库支持通过 [Pages CMS](https://pagescms.org) 在线编辑博客内容，采用 **staging → master** 双分支工作流避免每次保存触发 Vercel 构建。
+
+### 工作流程
+
+1. **日常编辑** — 在 Pages CMS 中切换到 `staging` 分支进行文章修改
+   - 访问 `https://pagescms.org/repos/{你的用户名}/{仓库名}/?branch=staging`
+   - 每次保存只会 commit 到 `staging` 分支，不会触发 Vercel 生产构建
+2. **发布上线** — 修改完成后，在 Pages CMS 侧边栏点击 **"发布到生产环境"** 按钮
+   - 自动触发 GitHub Actions 将 `staging` 分支合并到 `master`
+   - Vercel 检测到 `master` 变更后自动构建部署
+
+### 首次使用
+
+1. 在 Pages CMS 中授权 GitHub 账户
+2. 打开 Pages CMS 并选择本仓库（指定 `?branch=staging` 参数）
+3. 开始编辑内容
+
+### 配置说明
+
+CMS 配置文件为根目录的 `.pages.yml`，定义了可编辑的内容模型和媒体资源路径。
+
+> 注意：如果你 Fork 此仓库，`.pages.yml` 中的配置会自动生效，无需额外修改。
+
 ## 🧩 Markdown 扩展语法
 
 除了 Astro 默认支持的 [GitHub Flavored Markdown](https://github.github.com/gfm/) 之外，还包含了一些额外的 Markdown 功能：
