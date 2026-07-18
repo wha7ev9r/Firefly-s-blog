@@ -237,7 +237,7 @@ comment: true # 是否允许评论
 
 CMS 配置文件为根目录的 `.pages.yml`，定义了可编辑的内容模型、媒体资源路径，以及 **"发布到生产环境"** 按钮（`actions` 配置，触发 `.github/workflows/publish.yml`）。
 
-可编辑的内容包括：文章集合、关于页面、友链页面、留言板，以及友链数据表格（`src/data/friends.csv`，使用 datagrid 表格编辑器维护，`enabled` 列填 `true` 才会在友链页面显示）。
+可编辑的内容包括：文章集合、关于页面、友链页面、留言板，以及友链数据表格（`src/data/friends.csv`，使用 datagrid 表格编辑器维护；`enabled` 列填 `true` 才会在友链页面显示，`tags` 列用英文分号分隔多个标签，如 `Blog;Tech`）。
 
 > 注意：
 >

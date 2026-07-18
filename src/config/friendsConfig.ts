@@ -1,5 +1,8 @@
+// 注意：此文件会被 astro.config.mjs 经 src/config/index.ts 间接加载，
+// 该加载环境不解析 tsconfig 路径别名，CSV 导入必须使用相对路径
+
+import type { FriendLink, FriendsPageConfig } from "@/types/config";
 import friendsCsv from "../data/friends.csv?raw";
-import type { FriendLink, FriendsPageConfig } from "../types/config";
 
 // 可以在src/content/spec/friends.md中编写友链页面下方的自定义内容
 
@@ -71,6 +74,23 @@ const parseCsv = (text: string): string[][] => {
 const csvRows = parseCsv(friendsCsv);
 const header = csvRows[0] ?? [];
 const columnIndex = (name: string): number => header.indexOf(name);
+
+const requiredColumns = [
+	"title",
+	"imgurl",
+	"desc",
+	"siteurl",
+	"tags",
+	"weight",
+	"enabled",
+];
+const missingColumns = requiredColumns.filter(
+	(name) => columnIndex(name) === -1,
+);
+
+if (missingColumns.length > 0) {
+	throw new Error(`friends.csv 缺少必需的表头列: ${missingColumns.join(", ")}`);
+}
 
 export const friendsConfig: FriendLink[] = csvRows.slice(1).map((cells) => {
 	const cell = (name: string): string => cells[columnIndex(name)]?.trim() ?? "";

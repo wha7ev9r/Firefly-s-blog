@@ -82,7 +82,7 @@ content:
         label: 原文链接
         type: string
         pattern:
-          regex: "^$|^https?://.+"
+          regex: '^(?:$|https?://[^\s/?#]+(?:[/?#][^\s]*)?)$'
           message: "请输入以 http:// 或 https:// 开头的完整链接"
       # 个人博客一般不填写许可信息
       # - name: licenseName
@@ -139,6 +139,8 @@ content:
     type: file
     path: src/data/friends.csv
     format: datagrid
+    operations:
+      delete: false
 
   - name: guestbook
     label: 留言板
