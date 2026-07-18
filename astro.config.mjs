@@ -232,6 +232,7 @@ export default defineConfig({
 	},
 	vite: {
 		plugins: [tailwindcss()],
+		assetsInclude: ["**/*.csv"],
 		server: {
 			watch: {
 				ignored: ["**/package/**", "**/Firefly-docs/**"],

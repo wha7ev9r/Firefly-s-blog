@@ -190,7 +190,7 @@ src/
 │   ├── musicConfig.ts        # 音乐播放器配置
 │   ├── pioConfig.ts          # 看板娘配置
 │   ├── adConfig.ts           # 广告配置
-│   ├── friendsConfig.ts      # 友链配置
+│   ├── friendsConfig.ts      # 友链配置（友链数据在 src/data/friends.csv）
 │   ├── galleryConfig.ts      # 相册配置
 │   ├── sponsorConfig.ts      # 赞助配置
 │   └── coverImageConfig.ts  # 文章封面图配置
@@ -236,6 +236,8 @@ comment: true # 是否允许评论
 ### 配置说明
 
 CMS 配置文件为根目录的 `.pages.yml`，定义了可编辑的内容模型、媒体资源路径，以及 **"发布到生产环境"** 按钮（`actions` 配置，触发 `.github/workflows/publish.yml`）。
+
+可编辑的内容包括：文章集合、关于页面、友链页面、留言板，以及友链数据表格（`src/data/friends.csv`，使用 datagrid 表格编辑器维护；`enabled` 列填 `true` 才会在友链页面显示，`tags` 列用英文分号分隔多个标签，如 `Blog;Tech`）。
 
 > 注意：
 >

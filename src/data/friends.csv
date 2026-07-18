@@ -1,0 +1,2 @@
+title,imgurl,desc,siteurl,tags,weight,enabled
+示例友站,https://example.com/avatar.png,这是一条示例友链。enabled 填 true 才会显示,https://example.com,Blog;Tech,10,false
