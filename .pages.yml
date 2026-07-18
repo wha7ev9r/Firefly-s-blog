@@ -143,6 +143,11 @@ content:
         options:
           format: markdown
 
+actions:
+  - name: publish
+    label: 发布到生产环境
+    workflow: publish.yml
+
 settings:
   content:
     merge: true
