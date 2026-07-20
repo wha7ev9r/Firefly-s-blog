@@ -138,6 +138,7 @@ content:
     label: 友链数据
     type: file
     path: src/data/friends.csv
+    format: datagrid
     operations:
       delete: false
 
