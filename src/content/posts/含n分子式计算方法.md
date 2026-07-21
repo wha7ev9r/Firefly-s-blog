@@ -188,7 +188,7 @@ $$\boldsymbol{H = 2C + 2 - 2\Omega + N - X}$$
 
 ## 三、例子
 
-[![pmc92lj.png](https://s41.ax1x.com/2026/07/21/pmc92lj.png)](https://imgchr.com/i/pmc92lj)
+![pmc92lj.png](https://s41.ax1x.com/2026/07/21/pmc92lj.png)
 
 ### 1. 数杂原子
 
