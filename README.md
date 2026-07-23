@@ -237,7 +237,9 @@ comment: true # 是否允许评论
 
 CMS 配置文件为根目录的 `.pages.yml`，定义了可编辑的内容模型、媒体资源路径，以及 **"发布到生产环境"** 按钮（`actions` 配置，触发 `.github/workflows/publish.yml`）。
 
-可编辑的内容包括：文章集合、关于页面、友链页面、留言板，以及友链数据表格（`src/data/friends.csv`，使用 datagrid 表格编辑器维护；`enabled` 列填 `true` 才会在友链页面显示，`tags` 列用英文分号分隔多个标签，如 `Blog;Tech`）。
+可编辑的内容包括：文章集合、关于页面、友链页面、留言板、友链 CSV 数据，以及学习数据（`src/data/study-data.json`）。友链数据目前使用 CSV 代码编辑器维护，表头必须保持 `title,imgurl,desc,siteurl,tags,weight,enabled`；`enabled` 列填 `true` 才会在友链页面显示，`tags` 列用英文分号分隔多个标签，如 `Blog;Tech`。学习数据可在 Pages CMS 中通过课程和学习记录字段编辑。
+
+> Pages CMS 当前版本的 CSV datagrid 保存存在已知问题，因此友链配置明确使用代码编辑器，避免出现表格界面修改后内容没有写回 CSV 的情况。
 
 > 注意：
 >

@@ -138,9 +138,80 @@ content:
     label: 友链数据
     type: file
     path: src/data/friends.csv
-    format: datagrid
+    # Pages CMS 当前版本的 CSV datagrid 保存存在已知问题，使用代码编辑器保证原文可保存
+    format: code
     operations:
       delete: false
+
+  - name: study-data
+    label: 学习数据
+    type: file
+    path: src/data/study-data.json
+    format: json
+    fields:
+      - name: courses
+        label: 课程
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title}"
+        fields:
+          - name: id
+            label: ID
+            type: string
+            required: true
+          - name: title
+            label: 标题
+            type: string
+            required: true
+          - name: category
+            label: 分类
+            type: string
+          - name: url
+            label: 链接
+            type: string
+          - name: totalLessons
+            label: 总课时
+            type: number
+          - name: completedLessons
+            label: 已完成课时
+            type: number
+          - name: status
+            label: 状态
+            type: select
+            options:
+              values:
+                - name: studying
+                  label: 学习中
+                - name: completed
+                  label: 已完成
+                - name: pending
+                  label: 未开始
+
+      - name: records
+        label: 学习记录
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{date}"
+        fields:
+          - name: date
+            label: 日期
+            type: date
+            required: true
+            options:
+              format: "yyyy-MM-dd"
+          - name: minutes
+            label: 学习分钟数
+            type: number
+            required: true
+            options:
+              min: 0
+          - name: note
+            label: 备注
+            type: text
 
   - name: guestbook
     label: 留言板

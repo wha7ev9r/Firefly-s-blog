@@ -22,7 +22,7 @@ src/config/
 ├── navBarConfig.ts       # 导航栏配置
 ├── pioConfig.ts          # Pio 模型配置
 ├── adConfig.ts           # 广告配置
-├── friendsConfig.ts      # 友链配置（页面开关，友链数据在 src/data/friends.csv）
+├── friendsConfig.ts      # 友链配置（页面开关，友链数据通过 Pages CMS 的 CSV 代码编辑器维护）
 ├── galleryConfig.ts      # 相册配置
 ├── sponsorConfig.ts      # 赞助配置
 ├── coverImageConfig.ts   # 封面图配置
@@ -61,7 +61,7 @@ import { profileConfig } from "@/config/profileConfig";
 - `navBarConfig.ts` - 导航栏配置（链接、样式等）
 - `pioConfig.ts` - Pio 模型配置（Spine、Live2D 等）
 - `adConfig.ts` - 广告配置（广告位设置等）
-- `friendsConfig.ts` - 友链配置（页面行为开关；友链列表数据存放在 `src/data/friends.csv`，可通过 Pages CMS 表格编辑器在线维护，`tags` 列用英文分号分隔多个标签，如 `Blog;Tech`）
+- `friendsConfig.ts` - 友链配置（页面行为开关；友链列表数据存放在 `src/data/friends.csv`，通过 Pages CMS 的 CSV 代码编辑器在线维护，`tags` 列用英文分号分隔多个标签，如 `Blog;Tech`）
 - `sponsorConfig.ts` - 赞助配置（赞助方式、二维码等）
 - `coverImageConfig.ts` - 封面图配置（随机封面图列表等）
 

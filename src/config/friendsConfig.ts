@@ -70,7 +70,7 @@ const parseCsv = (text: string): string[][] => {
 	return rows.filter((cells) => cells.some((cell) => cell.trim() !== ""));
 };
 
-// 友链数据来自 src/data/friends.csv，可通过 Pages CMS 的表格编辑器（datagrid）在线维护
+// 友链数据来自 src/data/friends.csv，可通过 Pages CMS 的 CSV 代码编辑器在线维护
 const csvRows = parseCsv(friendsCsv);
 const header = csvRows[0] ?? [];
 const columnIndex = (name: string): number => header.indexOf(name);
