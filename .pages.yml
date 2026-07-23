@@ -234,6 +234,7 @@ actions:
   - name: publish
     label: 发布到生产环境
     workflow: publish.yml
+    ref: staging
 
 settings:
   content:
