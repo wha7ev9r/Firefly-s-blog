@@ -4,9 +4,9 @@ OpenCode 在 Firefly 仓库的工作指引。只保留容易误判或需要跨�
 
 ## 项目与工具链
 
-- 单包 Astro 7.2.2 静态博客主题，不是 monorepo；UI 主要是 `.astro` + Svelte 5，Tailwind CSS 4 通过 `@tailwindcss/vite` 接入。
+- 单包 Astro 7.3.3 静态博客主题，不是 monorepo；UI 主要是 `.astro` + Svelte 5，Tailwind CSS 4 通过 `@tailwindcss/vite` 接入。
 - 必须用 bun：`packageManager` 固定 `bun@1.4.2`，锁文件是 `bun.lock`（lockfileVersion 3，旧版 bun 读不了）。`devEngines.packageManager` 也改成指向 bun，但 **bun 目前不校验该字段**，所以原 pnpm 11 的 `EBADDEVENGINES` 误用拦截已不复存在——靠约定，不要再用 npm/pnpm/yarn。
-- Node 版本要求 `>=22`（`engines`）；CI 保留 Node 22/24 矩阵，但安装与脚本都由 bun 驱动。
+- 本地与 CI 都只需要 bun：CI 用 `oven-sh/setup-bun` 跑安装与 `bunx` 脚本，**不再安装 Node**（`engines.node >=22` 仅作为部署侧声明保留，例如 Vercel）。
 - `.npmrc` 仅保留 npmmirror/淘宝 registry 配置（bun 会读取本文件以及 `~/.npmrc`）。除非明确要切源，不要改动 registry。
 - 安全覆盖统一放在 `package.json` 顶层 `overrides`（undici、tar、minimatch、serialize-javascript、@babel/*、brace-expansion、js-yaml 等，共 27 条）。bun 支持 pnpm 风格的版本选择器键（如 `minimatch@>=5.0.0 <5.1.8`，比较的是依赖声明的范围），但正因为用了这类键，`bun.lock` 会写成 lockfileVersion 3。更新锁文件时注意保留这些覆盖。
 - 依赖构建脚本白名单改为 `package.json` 的 `trustedDependencies: ["esbuild"]`：bun 的 `trustedDependencies` 是**整包级白名单，且显式列出会替换 bun 内置的约 367 包清单**，因此这里只允许 esbuild 跑 install 脚本，与原 pnpm `allowBuilds { esbuild: true, swup: false }` 语义一致（swup 未列出＝被阻止）。**注意行为差异**：pnpm 会报 `ERR_PNPM_IGNORED_BUILDS` 提醒你，而 bun 只会静默跳过脚本；新增含 install/postinstall 脚本的依赖后若二进制缺失，要主动把它加进 `trustedDependencies` 并重新 `bun install`。
@@ -60,7 +60,7 @@ OpenCode 在 Firefly 仓库的工作指引。只保留容易误判或需要跨�
 
 ## CI 与部署
 
-- PR/push 到 `master` 会跑 `.github/workflows/build.yml` 的 `bunx astro check` 和 `bunx astro build`，矩阵 Node 22/24（依赖用 `bun install --frozen-lockfile` 装，`oven-sh/setup-bun` 提供 bun）。注意：这里的 build 不包含图标生成和 Pagefind。
+- PR/push 到 `master` 会跑 `.github/workflows/build.yml` 的 `bunx astro check` 和 `bunx astro build`（依赖用 `bun install --frozen-lockfile` 装，`oven-sh/setup-bun@v2.2.0` 提供 bun；无 Node 矩阵、不安装 Node）。注意：这里的 build 不包含图标生成和 Pagefind。
 - `.github/workflows/biome.yml` 用 `biome ci ./src --reporter=github`，不是 `bun run lint`，不会自动写回。
 - 无 GitHub Pages deploy workflow；部署由 `vercel.json` 接管（构建命令 `bun run build`、输出 `dist`、安装 `bun install`），并配置了全站安全响应头与 `/_astro/*` 长缓存。
 
