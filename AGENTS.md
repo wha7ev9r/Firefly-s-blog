@@ -5,7 +5,7 @@ OpenCode 在 Firefly 仓库的工作指引。只保留容易误判或需要跨�
 ## 项目与工具链
 
 - 单包 Astro 7.3.3 静态博客主题，不是 monorepo；UI 主要是 `.astro` + Svelte 5，Tailwind CSS 4 通过 `@tailwindcss/vite` 接入。
-- 必须用 bun：`packageManager` 固定 `bun@1.4.2`，锁文件是 `bun.lock`（lockfileVersion 3，旧版 bun 读不了）。`devEngines.packageManager` 也改成指向 bun，但 **bun 目前不校验该字段**，所以原 pnpm 11 的 `EBADDEVENGINES` 误用拦截已不复存在——靠约定，不要再用 npm/pnpm/yarn。
+- 必须用 bun：锁文件是 `bun.lock`（lockfileVersion 3，旧版 bun 读不了）。**不要在 `package.json` 里写 `packageManager` 或 `devEngines.packageManager`**（两者都指向 bun 会让 Cloudflare Pages 构建直接失败，详见「CI 与部署」）。bun 版本由使用方各自固定：CI 用 `oven-sh/setup-bun` 的 `bun-version: 1.4.2`，Cloudflare 用构建变量 `BUN_VERSION=1.4.2`，Vercel 用 `vercel.json`，本机靠约定——不要再用 npm/pnpm/yarn。
 - 本地与 CI 都只需要 bun：CI 用 `oven-sh/setup-bun` 跑安装与 `bunx` 脚本，**不再安装 Node**（`engines.node >=22` 仅作为部署侧声明保留，例如 Vercel）。
 - `.npmrc` 仅保留 npmmirror/淘宝 registry 配置（bun 会读取本文件以及 `~/.npmrc`）。除非明确要切源，不要改动 registry。
 - 安全覆盖统一放在 `package.json` 顶层 `overrides`（undici、tar、minimatch、serialize-javascript、@babel/*、brace-expansion、js-yaml 等，共 27 条）。bun 支持 pnpm 风格的版本选择器键（如 `minimatch@>=5.0.0 <5.1.8`，比较的是依赖声明的范围），但正因为用了这类键，`bun.lock` 会写成 lockfileVersion 3。更新锁文件时注意保留这些覆盖。
@@ -63,6 +63,10 @@ OpenCode 在 Firefly 仓库的工作指引。只保留容易误判或需要跨�
 - PR/push 到 `master` 会跑 `.github/workflows/build.yml` 的 `bunx astro check` 和 `bunx astro build`（依赖用 `bun install --frozen-lockfile` 装，`oven-sh/setup-bun@v2.2.0` 提供 bun；无 Node 矩阵、不安装 Node）。注意：这里的 build 不包含图标生成和 Pagefind。
 - `.github/workflows/biome.yml` 用 `biome ci ./src --reporter=github`，不是 `bun run lint`，不会自动写回。
 - 无 GitHub Pages deploy workflow；部署由 `vercel.json` 接管（构建命令 `bun run build`、输出 `dist`、安装 `bun install`），并配置了全站安全响应头与 `/_astro/*` 长缓存。
+- **Cloudflare Pages 的 bun 坑**（项目名 `firefly-s-blog`，生产分支 `master`）：CF 的构建脚本在装依赖前会把 `package.json` 的 `packageManager` / `devEngines.packageManager` 交给 **corepack** 激活，而 corepack 不认 bun，于是构建在 `Unsupported package manager specification (bun@1.4.2)` 处 exit 1，**连安装都没开始**。已踩过的三个无效修法：改构建命令、加 `SKIP_DEPENDENCY_INSTALL`、单独加 `BUN_VERSION`（仍会 corepack 失败）——那些步骤都在工具"激活"阶段之前。当前可用配置：
+  - 构建变量：`BUN_VERSION=1.4.2`（CF 用 asdf 装到 PATH；镜像自带的 1.2.15 读不了 lockfileVersion 3）、`SKIP_DEPENDENCY_INSTALL=true`（关掉 CF 自己的依赖安装，因为它可能识别不了文本格式的 `bun.lock`）
+  - 构建命令：`bun install --frozen-lockfile && bun run build`
+  - `NODE_VERSION` 生产 24 / 预览 22；`PNPM_VERSION` 是 pnpm 时代残留，已无用但无害
 
 ## Pages CMS 双分支内容流
 
