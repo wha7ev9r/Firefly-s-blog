@@ -7,7 +7,7 @@
 > A Fresh and Beautiful Astro Static Blog Theme Template
 >
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen)
-> ![pnpm >= 11](https://img.shields.io/badge/pnpm-%3E%3D11-blue)
+> ![bun >= 1.4.2](https://img.shields.io/badge/bun-%3E%3D1.4.2-blue)
 > ![Astro](https://img.shields.io/badge/Astro-7.2.2-orange)
 > ![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-blue)
 >
@@ -92,7 +92,7 @@ If you have useful features and optimizations, please submit a [Pull Request](ht
 ### Requirements
 
 - Node.js ≥ 22
-- pnpm ≥ 11
+- bun ≥ 1.4.2
 
 ### Local Development
 
@@ -113,11 +113,10 @@ If you have useful features and optimizations, please submit a [Pull Request](ht
 2. **Install dependencies:**
 
    ```bash
-   # Install the repository-required pnpm version if not installed
-   npm install -g pnpm@11.22.0
-
+   # Requires bun ≥ 1.4.2 (install: https://bun.com/docs/installation)
+   
    # Install project dependencies
-   pnpm install
+   bun install
    ```
 
 3. **Configure blog:**
@@ -125,7 +124,7 @@ If you have useful features and optimizations, please submit a [Pull Request](ht
 
 4. **Start development server:**
    ```bash
-   pnpm dev
+   bun run dev
    ```
    Blog will be available at `http://localhost:4321`
 
@@ -140,9 +139,9 @@ If you have useful features and optimizations, please submit a [Pull Request](ht
 
   Output Directory: `dist`
 
-  Build Command: `pnpm run build`
+  Build Command: `bun run build`
 
-  Install Command: `pnpm install`
+  Install Command: `bun install`
 
   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/CuteLeaf/Firefly&project-name=Firefly&repository-name=Firefly)
   [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CuteLeaf/Firefly)
@@ -227,15 +226,15 @@ All commands need to be executed in the project root directory:
 
 | Command                    | Action                                                |
 | :------------------------- | :---------------------------------------------------- |
-| `pnpm install`             | Install dependencies                                  |
-| `pnpm dev`                 | Start local development server at `localhost:4321`    |
-| `pnpm build`               | Build site to `./dist/`                               |
-| `pnpm preview`             | Preview built site locally                            |
-| `pnpm check`               | Check for errors in code                              |
-| `pnpm format`              | Format your code using Biome                          |
-| `pnpm new-post <filename>` | Create new article                                    |
-| `pnpm astro ...`           | Execute `astro add`, `astro check` and other commands |
-| `pnpm astro --help`        | Display Astro CLI help                                |
+| `bun install`             | Install dependencies                                  |
+| `bun run dev`                 | Start local development server at `localhost:4321`    |
+| `bun run build`               | Build site to `./dist/`                               |
+| `bun run preview`             | Preview built site locally                            |
+| `bun run check`               | Check for errors in code                              |
+| `bun run format`              | Format your code using Biome                          |
+| `bun run new-post <filename>` | Create new article                                    |
+| `bunx astro ...`           | Execute `astro add`, `astro check` and other commands |
+| `bunx astro --help`        | Display Astro CLI help                                |
 
 ## 🙏 Acknowledgments
 

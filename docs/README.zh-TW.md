@@ -7,7 +7,7 @@
 > 一款清新美觀的 Astro 靜態博客主題模板
 >
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen)
-> ![pnpm >= 11](https://img.shields.io/badge/pnpm-%3E%3D11-blue)
+> ![bun >= 1.4.2](https://img.shields.io/badge/bun-%3E%3D1.4.2-blue)
 > ![Astro](https://img.shields.io/badge/Astro-7.2.2-orange)
 > ![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-blue)
 >
@@ -92,7 +92,7 @@
 ### 環境要求
 
 - Node.js ≥ 22
-- pnpm ≥ 11
+- bun ≥ 1.4.2
 
 ### 本地開發部署
 
@@ -113,11 +113,10 @@
 2. **安裝依賴：**
 
    ```bash
-   # 如果沒有安裝 pnpm，先安裝倉庫要求的版本
-   npm install -g pnpm@11.22.0
-
+   # 需要 bun ≥ 1.4.2（安裝參考：https://bun.com/docs/installation）
+   
    # 安裝專案依賴
-   pnpm install
+   bun install
    ```
 
 3. **配置部落格：**
@@ -125,7 +124,7 @@
 
 4. **啟動開發伺服器：**
    ```bash
-   pnpm dev
+   bun run dev
    ```
    部落格將在 `http://localhost:4321` 可用
 
@@ -140,9 +139,9 @@
 
   輸出目錄： `dist`
 
-  建置命令： `pnpm run build`
+  建置命令： `bun run build`
 
-  安裝命令： `pnpm install`
+  安裝命令： `bun install`
 
   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/CuteLeaf/Firefly&project-name=Firefly&repository-name=Firefly)
   [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CuteLeaf/Firefly)
@@ -227,15 +226,15 @@ comment: true # 是否允許留言
 
 | Command                    | Action                                 |
 | :------------------------- | :------------------------------------- |
-| `pnpm install`             | 安裝依賴                               |
-| `pnpm dev`                 | 在 `localhost:4321` 啟動本地開發伺服器 |
-| `pnpm build`               | 建置網站至 `./dist/`                   |
-| `pnpm preview`             | 本地預覽已建置的網站                   |
-| `pnpm check`               | 檢查程式碼中的錯誤                     |
-| `pnpm format`              | 使用 Biome 格式化您的程式碼            |
-| `pnpm new-post <filename>` | 建立新文章                             |
-| `pnpm astro ...`           | 執行 `astro add`, `astro check` 等指令 |
-| `pnpm astro --help`        | 顯示 Astro CLI 說明                    |
+| `bun install`             | 安裝依賴                               |
+| `bun run dev`                 | 在 `localhost:4321` 啟動本地開發伺服器 |
+| `bun run build`               | 建置網站至 `./dist/`                   |
+| `bun run preview`             | 本地預覽已建置的網站                   |
+| `bun run check`               | 檢查程式碼中的錯誤                     |
+| `bun run format`              | 使用 Biome 格式化您的程式碼            |
+| `bun run new-post <filename>` | 建立新文章                             |
+| `bunx astro ...`           | 執行 `astro add`, `astro check` 等指令 |
+| `bunx astro --help`        | 顯示 Astro CLI 說明                    |
 
 ## 🙏 致謝
 
