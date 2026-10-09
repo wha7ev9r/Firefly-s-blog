@@ -103,7 +103,6 @@
 		"postcss-import": "^16.1.1",
 		"tailwindcss": "^4.3.3"
 	},
-	"packageManager": "bun@1.4.2",
 	"trustedDependencies": ["esbuild"],
 	"overrides": {
 		"undici": "7.30.0",
