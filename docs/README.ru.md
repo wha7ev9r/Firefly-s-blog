@@ -7,7 +7,7 @@
 > Свежий и красивый шаблон темы блога Astro
 >
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen)
-> ![pnpm >= 11](https://img.shields.io/badge/pnpm-%3E%3D11-blue)
+> ![bun >= 1.4.2](https://img.shields.io/badge/bun-%3E%3D1.4.2-blue)
 > ![Astro](https://img.shields.io/badge/Astro-7.2.2-orange)
 > ![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-blue)
 >
@@ -92,7 +92,7 @@
 ### Требования
 
 - Node.js ≥ 22
-- pnpm ≥ 11
+- bun ≥ 1.4.2
 
 ### Локальная разработка
 
@@ -113,11 +113,10 @@
 2. **Установить зависимости:**
 
    ```bash
-   # Установите требуемую репозиторием версию pnpm, если еще не установлена
-   npm install -g pnpm@11.22.0
-
+   # Требуется bun ≥ 1.4.2 (установка: https://bun.com/docs/installation)
+   
    # Установить зависимости проекта
-   pnpm install
+   bun install
    ```
 
 3. **Настроить блог:**
@@ -125,7 +124,7 @@
 
 4. **Запустить сервер разработки:**
    ```bash
-   pnpm dev
+   bun run dev
    ```
    Блог будет доступен по адресу `http://localhost:4321`
 
@@ -140,9 +139,9 @@
 
   Каталог вывода: `dist`
 
-  Команда сборки: `pnpm run build`
+  Команда сборки: `bun run build`
 
-  Команда установки: `pnpm install`
+  Команда установки: `bun install`
 
   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/CuteLeaf/Firefly&project-name=Firefly&repository-name=Firefly)
   [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CuteLeaf/Firefly)
@@ -227,15 +226,15 @@ comment: true # Включить комментарии
 
 | Команда                    | Действие                                                  |
 | :------------------------- | :-------------------------------------------------------- |
-| `pnpm install`             | Установить зависимости                                    |
-| `pnpm dev`                 | Запустить локальный сервер разработки на `localhost:4321` |
-| `pnpm build`               | Собрать сайт в `./dist/`                                  |
-| `pnpm preview`             | Локальный предварительный просмотр собранного сайта       |
-| `pnpm check`               | Проверить код на наличие ошибок                           |
-| `pnpm format`              | Отформатировать код с помощью Biome                       |
-| `pnpm new-post <filename>` | Создать новую статью                                      |
-| `pnpm astro ...`           | Выполнить `astro add`, `astro check` и другие команды     |
-| `pnpm astro --help`        | Показать справку Astro CLI                                |
+| `bun install`             | Установить зависимости                                    |
+| `bun run dev`                 | Запустить локальный сервер разработки на `localhost:4321` |
+| `bun run build`               | Собрать сайт в `./dist/`                                  |
+| `bun run preview`             | Локальный предварительный просмотр собранного сайта       |
+| `bun run check`               | Проверить код на наличие ошибок                           |
+| `bun run format`              | Отформатировать код с помощью Biome                       |
+| `bun run new-post <filename>` | Создать новую статью                                      |
+| `bunx astro ...`           | Выполнить `astro add`, `astro check` и другие команды     |
+| `bunx astro --help`        | Показать справку Astro CLI                                |
 
 ## 🙏 Благодарности
 

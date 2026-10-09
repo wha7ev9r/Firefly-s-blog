@@ -7,7 +7,7 @@
 > 美しくモダンな Astro 静的ブログテーマテンプレート
 >
 > ![Node.js >= 22](https://img.shields.io/badge/node.js-%3E%3D22-brightgreen)
-> ![pnpm >= 11](https://img.shields.io/badge/pnpm-%3E%3D11-blue)
+> ![bun >= 1.4.2](https://img.shields.io/badge/bun-%3E%3D1.4.2-blue)
 > ![Astro](https://img.shields.io/badge/Astro-7.2.2-orange)
 > ![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-blue)
 >
@@ -92,7 +92,7 @@
 ### 環境要件
 
 - Node.js ≥ 22
-- pnpm ≥ 11
+- bun ≥ 1.4.2
 
 ### ローカル開発
 
@@ -113,11 +113,10 @@
 2. **依存関係のインストール：**
 
    ```bash
-   # pnpmがインストールされていない場合、リポジトリで必要なバージョンをインストール
-   npm install -g pnpm@11.22.0
-
+   # bun ≥ 1.4.2 が必要（インストール: https://bun.com/docs/installation）
+   
    # プロジェクトの依存関係をインストール
-   pnpm install
+   bun install
    ```
 
 3. **ブログの設定：**
@@ -125,7 +124,7 @@
 
 4. **開発サーバーの起動：**
    ```bash
-   pnpm dev
+   bun run dev
    ```
    ブログは`http://localhost:4321`で利用可能になります
 
@@ -140,9 +139,9 @@
 
   出力ディレクトリ： `dist`
 
-  ビルドコマンド： `pnpm run build`
+  ビルドコマンド： `bun run build`
 
-  インストールコマンド： `pnpm install`
+  インストールコマンド： `bun install`
 
   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/CuteLeaf/Firefly&project-name=Firefly&repository-name=Firefly)
   [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/CuteLeaf/Firefly)
@@ -227,15 +226,15 @@ Astroがデフォルトで対応している[GitHub Flavored Markdown](https://g
 
 | Command                    | Action                                         |
 | :------------------------- | :--------------------------------------------- |
-| `pnpm install`             | 依存関係をインストール                         |
-| `pnpm dev`                 | `localhost:4321`でローカル開発サーバーを起動   |
-| `pnpm build`               | `./dist/`にサイトをビルド                      |
-| `pnpm preview`             | ビルドされたサイトをローカルでプレビュー       |
-| `pnpm check`               | コード内のエラーをチェック                     |
-| `pnpm format`              | Biomeを使用してコードをフォーマット            |
-| `pnpm new-post <filename>` | 新しい記事を作成                               |
-| `pnpm astro ...`           | `astro add`、`astro check`などのコマンドを実行 |
-| `pnpm astro --help`        | Astro CLIヘルプを表示                          |
+| `bun install`             | 依存関係をインストール                         |
+| `bun run dev`                 | `localhost:4321`でローカル開発サーバーを起動   |
+| `bun run build`               | `./dist/`にサイトをビルド                      |
+| `bun run preview`             | ビルドされたサイトをローカルでプレビュー       |
+| `bun run check`               | コード内のエラーをチェック                     |
+| `bun run format`              | Biomeを使用してコードをフォーマット            |
+| `bun run new-post <filename>` | 新しい記事を作成                               |
+| `bunx astro ...`           | `astro add`、`astro check`などのコマンドを実行 |
+| `bunx astro --help`        | Astro CLIヘルプを表示                          |
 
 ## 🙏 謝辞
 
